@@ -18,17 +18,16 @@ var checkedService:String = ""
 
 var scanNumber:String = "First"
 
-var comments:[String] = ["Hey DBSC","They were late"]
+var comments:[String] = ["Hey DBSC","They were late by 10 minutes"]
+var commentTimes:[String] = ["3:43","2:10"]
 
 class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var commentBox: UITextView!
     @IBOutlet weak var errorLabel: UILabel!
     
     var services: [String] = ["Communication Facilitator (CF)", "Service Support Program (SSP)"]
     
     @IBOutlet weak var servicesTableView: UITableView!
-    @IBOutlet weak var commentsTableView: UITableView!
     
     @IBAction func verifyPressed(sender: AnyObject) {
         
@@ -52,14 +51,9 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var borderColor : UIColor = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
-        commentBox.layer.borderWidth = 0.5
-        commentBox.layer.borderColor = borderColor.CGColor
-        commentBox.layer.cornerRadius = 5.0
-        
         servicesTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
-        commentsTableView.registerNib(UINib(nibName: "CommentCell", bundle: nil), forCellReuseIdentifier: "commentCell")
+        //commentsTableView.registerNib(UINib(nibName: "CommentCell", bundle: nil), forCellReuseIdentifier: "commentCell")
 
     }
     

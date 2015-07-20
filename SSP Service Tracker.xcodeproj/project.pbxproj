@@ -22,6 +22,7 @@
 		B3C446F71B59B8FA009BA3D7 /* CommentFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C446F61B59B8FA009BA3D7 /* CommentFeedView.swift */; };
 		B3EB75371B5B184F007A3F5B /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EB75351B5B184F007A3F5B /* CommentCell.swift */; };
 		B3EB75381B5B184F007A3F5B /* CommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3EB75361B5B184F007A3F5B /* CommentCell.xib */; };
+		B3FF6F281B5CC49C007037BC /* CommentTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FF6F271B5CC49C007037BC /* CommentTableCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		B3C446F61B59B8FA009BA3D7 /* CommentFeedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentFeedView.swift; sourceTree = "<group>"; };
 		B3EB75351B5B184F007A3F5B /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		B3EB75361B5B184F007A3F5B /* CommentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentCell.xib; sourceTree = "<group>"; };
+		B3FF6F271B5CC49C007037BC /* CommentTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentTableCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 				B3C446F31B59B87A009BA3D7 /* Comment Feed */,
 				B396F16F1B4B1C37004EE34C /* ViewController.swift */,
 				B33BFAFF1B4E437F0000EEEF /* OtherViewController.swift */,
+				B3FF6F271B5CC49C007037BC /* CommentTableCell.swift */,
 				B33BFAFB1B4E2F6D0000EEEF /* SettingsViewController.swift */,
 				B3536A3A1B50774A00BD3EDD /* QRVideoViewController.swift */,
 				B396F18F1B4B2851004EE34C /* ServiceRunningViewController.swift */,
@@ -258,6 +261,7 @@
 				B3EB75371B5B184F007A3F5B /* CommentCell.swift in Sources */,
 				B3C446F71B59B8FA009BA3D7 /* CommentFeedView.swift in Sources */,
 				B3536A3B1B50774A00BD3EDD /* QRVideoViewController.swift in Sources */,
+				B3FF6F281B5CC49C007037BC /* CommentTableCell.swift in Sources */,
 				B33BFAFE1B4E3C3B0000EEEF /* SummaryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
