@@ -29,16 +29,14 @@ class QRVideoViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         self.navigationItem.backBarButtonItem = button
     }
     
+    //Reverts back to the first QR code scan
     func changeScanNumber() {
-        
         scanNumber = "First"
-        
     }
     
     override func viewWillAppear(animated: Bool) {
         
-        // Get an instance of the AVCaptureDevice class to initialize a device object and provide the video
-        // as the media type parameter.
+        // Get an instance of the AVCaptureDevice class to initialize a device object and provide the video as the media type parameter.
         let captureDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
         
         // Get an instance of the AVCaptureDeviceInput class using the previous device object.
@@ -108,9 +106,7 @@ class QRVideoViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 messageLabel.text = QRArray[0]
                 println(QRArray)
                 
-                
-                
-                
+                //Performs a different segue depending on whether it's the first or second scan
                 if scanNumber == "First" {
                     
                     captureSession?.stopRunning()
@@ -129,13 +125,8 @@ class QRVideoViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                     } else {
                         
                         messageLabel.text = "Please scan the same ID card"
-                        
                     }
-                    
                 }
-                
-                /*var nextButton = UIBarButtonItem(title: "Next", style: .Plain, target: self, action: Selector("next"))
-                self.navigationItem.rightBarButtonItem = nextButton*/
             }
         }
     }

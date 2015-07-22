@@ -9,20 +9,20 @@
 import UIKit
 
 class SettingsViewController: UIViewController {
-
+    
+    @IBOutlet weak var nameLabel: UITextField!
+    
+    //Saves settings
     @IBAction func savePressed(sender: AnyObject) {
         
         user = nameLabel.text
         
     }
     
+    //Closes keyboard when screen is touched outside of keyboard
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        
         self.view.endEditing(true)
-        
     }
-    
-    @IBOutlet weak var nameLabel: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()

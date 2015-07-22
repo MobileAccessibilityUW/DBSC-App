@@ -27,8 +27,10 @@ class ServiceRunningViewController: UIViewController {
         
         scanNumber = "Second"
         
+        //Asks the user if they're sure to prevent any accidental completions
         var alert = UIAlertController(title: "Service Completed?", message: "Press \"Yes\" to continue and send email to DBSC", preferredStyle: UIAlertControllerStyle.Alert)
         
+        //The alert has two choices, "Yes" and "No"
         alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
             
             self.performSegueWithIdentifier("serviceCompleted", sender: self)
@@ -41,24 +43,25 @@ class ServiceRunningViewController: UIViewController {
         
         alert.addAction(UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
             
-            
-            
         }))
         
-        
+        //Presents the alert
         self.presentViewController(alert, animated:true, completion:nil)
     }
 
     override func viewWillAppear(animated: Bool) {
         
+        //Sets labels to match the current service client and provider
         toLabel.text = "Providing to: " + "\(QRInfo[0])"
         byLabel.text = "Provided by: " + "\(user)"
         
         timer.invalidate()
         
+        //Sets timer to start counting and calling "changeLabel"
         timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "changeLabel", userInfo: nil, repeats: true)
     }
     
+    //Updates the time label as the timer is running
     func changeLabel() {
         
         seconds++
@@ -67,8 +70,6 @@ class ServiceRunningViewController: UIViewController {
         var mm = String(format: "%02d", (seconds % 3600) / 60)
         var ss = String(format: "%02d", (seconds % 3600) % 60)
         timeLabel.text = hh + ":" + mm + ":" + ss
-        
-        
     }
     
     override func viewDidLoad() {

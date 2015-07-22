@@ -18,11 +18,13 @@
 		B396F1781B4B1C37004EE34C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B396F1761B4B1C37004EE34C /* LaunchScreen.xib */; };
 		B396F1841B4B1C37004EE34C /* SSP_Service_TrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B396F1831B4B1C37004EE34C /* SSP_Service_TrackerTests.swift */; };
 		B396F1901B4B2851004EE34C /* ServiceRunningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B396F18F1B4B2851004EE34C /* ServiceRunningViewController.swift */; };
-		B3C446F51B59B8AA009BA3D7 /* CommentsFeedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3C446F41B59B8AA009BA3D7 /* CommentsFeedView.xib */; };
-		B3C446F71B59B8FA009BA3D7 /* CommentFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C446F61B59B8FA009BA3D7 /* CommentFeedView.swift */; };
-		B3EB75371B5B184F007A3F5B /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EB75351B5B184F007A3F5B /* CommentCell.swift */; };
-		B3EB75381B5B184F007A3F5B /* CommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3EB75361B5B184F007A3F5B /* CommentCell.xib */; };
+		B3AFE9001B6051F2006BA463 /* Base64Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B3AFE8F71B6051F2006BA463 /* Base64Transcoder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B3AFE9011B6051F2006BA463 /* HSK_CFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = B3AFE8F91B6051F2006BA463 /* HSK_CFUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B3AFE9021B6051F2006BA463 /* NSData+Base64Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = B3AFE8FB1B6051F2006BA463 /* NSData+Base64Additions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B3AFE9031B6051F2006BA463 /* NSStream+SKPSMTPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = B3AFE8FD1B6051F2006BA463 /* NSStream+SKPSMTPExtensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B3AFE9041B6051F2006BA463 /* SKPSMTPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = B3AFE8FF1B6051F2006BA463 /* SKPSMTPMessage.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B3FF6F281B5CC49C007037BC /* CommentTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FF6F271B5CC49C007037BC /* CommentTableCell.swift */; };
+		B3FF6F2B1B5DAFD7007037BC /* DBSCDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B3FF6F291B5DAFD7007037BC /* DBSCDataModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,11 +53,19 @@
 		B396F1821B4B1C37004EE34C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B396F1831B4B1C37004EE34C /* SSP_Service_TrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSP_Service_TrackerTests.swift; sourceTree = "<group>"; };
 		B396F18F1B4B2851004EE34C /* ServiceRunningViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceRunningViewController.swift; sourceTree = "<group>"; };
-		B3C446F41B59B8AA009BA3D7 /* CommentsFeedView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentsFeedView.xib; sourceTree = "<group>"; };
-		B3C446F61B59B8FA009BA3D7 /* CommentFeedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentFeedView.swift; sourceTree = "<group>"; };
-		B3EB75351B5B184F007A3F5B /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
-		B3EB75361B5B184F007A3F5B /* CommentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentCell.xib; sourceTree = "<group>"; };
+		B3AFE8F51B6051F1006BA463 /* SSP Service Tracker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SSP Service Tracker-Bridging-Header.h"; sourceTree = "<group>"; };
+		B3AFE8F61B6051F2006BA463 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
+		B3AFE8F71B6051F2006BA463 /* Base64Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Transcoder.m; sourceTree = "<group>"; };
+		B3AFE8F81B6051F2006BA463 /* HSK_CFUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSK_CFUtilities.h; sourceTree = "<group>"; };
+		B3AFE8F91B6051F2006BA463 /* HSK_CFUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HSK_CFUtilities.m; sourceTree = "<group>"; };
+		B3AFE8FA1B6051F2006BA463 /* NSData+Base64Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64Additions.h"; sourceTree = "<group>"; };
+		B3AFE8FB1B6051F2006BA463 /* NSData+Base64Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64Additions.m"; sourceTree = "<group>"; };
+		B3AFE8FC1B6051F2006BA463 /* NSStream+SKPSMTPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSStream+SKPSMTPExtensions.h"; sourceTree = "<group>"; };
+		B3AFE8FD1B6051F2006BA463 /* NSStream+SKPSMTPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSStream+SKPSMTPExtensions.m"; sourceTree = "<group>"; };
+		B3AFE8FE1B6051F2006BA463 /* SKPSMTPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKPSMTPMessage.h; sourceTree = "<group>"; };
+		B3AFE8FF1B6051F2006BA463 /* SKPSMTPMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKPSMTPMessage.m; sourceTree = "<group>"; };
 		B3FF6F271B5CC49C007037BC /* CommentTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentTableCell.swift; sourceTree = "<group>"; };
+		B3FF6F2A1B5DAFD7007037BC /* DBSCDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DBSCDataModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +108,6 @@
 			isa = PBXGroup;
 			children = (
 				B396F16D1B4B1C37004EE34C /* AppDelegate.swift */,
-				B3C446F31B59B87A009BA3D7 /* Comment Feed */,
 				B396F16F1B4B1C37004EE34C /* ViewController.swift */,
 				B33BFAFF1B4E437F0000EEEF /* OtherViewController.swift */,
 				B3FF6F271B5CC49C007037BC /* CommentTableCell.swift */,
@@ -106,10 +115,13 @@
 				B3536A3A1B50774A00BD3EDD /* QRVideoViewController.swift */,
 				B396F18F1B4B2851004EE34C /* ServiceRunningViewController.swift */,
 				B33BFAFD1B4E3C3A0000EEEF /* SummaryViewController.swift */,
+				B3AFE9051B605204006BA463 /* eMail Framework */,
 				B396F1711B4B1C37004EE34C /* Main.storyboard */,
 				B396F1741B4B1C37004EE34C /* Images.xcassets */,
 				B396F1761B4B1C37004EE34C /* LaunchScreen.xib */,
+				B3FF6F291B5DAFD7007037BC /* DBSCDataModel.xcdatamodeld */,
 				B396F16B1B4B1C37004EE34C /* Supporting Files */,
+				B3AFE8F51B6051F1006BA463 /* SSP Service Tracker-Bridging-Header.h */,
 			);
 			path = "SSP Service Tracker";
 			sourceTree = "<group>";
@@ -139,15 +151,21 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		B3C446F31B59B87A009BA3D7 /* Comment Feed */ = {
+		B3AFE9051B605204006BA463 /* eMail Framework */ = {
 			isa = PBXGroup;
 			children = (
-				B3C446F61B59B8FA009BA3D7 /* CommentFeedView.swift */,
-				B3C446F41B59B8AA009BA3D7 /* CommentsFeedView.xib */,
-				B3EB75351B5B184F007A3F5B /* CommentCell.swift */,
-				B3EB75361B5B184F007A3F5B /* CommentCell.xib */,
+				B3AFE8F61B6051F2006BA463 /* Base64Transcoder.h */,
+				B3AFE8F71B6051F2006BA463 /* Base64Transcoder.m */,
+				B3AFE8F81B6051F2006BA463 /* HSK_CFUtilities.h */,
+				B3AFE8F91B6051F2006BA463 /* HSK_CFUtilities.m */,
+				B3AFE8FA1B6051F2006BA463 /* NSData+Base64Additions.h */,
+				B3AFE8FB1B6051F2006BA463 /* NSData+Base64Additions.m */,
+				B3AFE8FC1B6051F2006BA463 /* NSStream+SKPSMTPExtensions.h */,
+				B3AFE8FD1B6051F2006BA463 /* NSStream+SKPSMTPExtensions.m */,
+				B3AFE8FE1B6051F2006BA463 /* SKPSMTPMessage.h */,
+				B3AFE8FF1B6051F2006BA463 /* SKPSMTPMessage.m */,
 			);
-			name = "Comment Feed";
+			name = "eMail Framework";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -231,10 +249,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3EB75381B5B184F007A3F5B /* CommentCell.xib in Resources */,
 				B396F1731B4B1C37004EE34C /* Main.storyboard in Resources */,
 				B396F1781B4B1C37004EE34C /* LaunchScreen.xib in Resources */,
-				B3C446F51B59B8AA009BA3D7 /* CommentsFeedView.xib in Resources */,
 				B396F1751B4B1C37004EE34C /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,15 +269,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3AFE9011B6051F2006BA463 /* HSK_CFUtilities.m in Sources */,
+				B3FF6F2B1B5DAFD7007037BC /* DBSCDataModel.xcdatamodeld in Sources */,
 				B396F1701B4B1C37004EE34C /* ViewController.swift in Sources */,
 				B33BFB001B4E437F0000EEEF /* OtherViewController.swift in Sources */,
+				B3AFE9001B6051F2006BA463 /* Base64Transcoder.m in Sources */,
 				B396F16E1B4B1C37004EE34C /* AppDelegate.swift in Sources */,
 				B396F1901B4B2851004EE34C /* ServiceRunningViewController.swift in Sources */,
 				B33BFAFC1B4E2F6D0000EEEF /* SettingsViewController.swift in Sources */,
-				B3EB75371B5B184F007A3F5B /* CommentCell.swift in Sources */,
-				B3C446F71B59B8FA009BA3D7 /* CommentFeedView.swift in Sources */,
+				B3AFE9041B6051F2006BA463 /* SKPSMTPMessage.m in Sources */,
 				B3536A3B1B50774A00BD3EDD /* QRVideoViewController.swift in Sources */,
+				B3AFE9021B6051F2006BA463 /* NSData+Base64Additions.m in Sources */,
 				B3FF6F281B5CC49C007037BC /* CommentTableCell.swift in Sources */,
+				B3AFE9031B6051F2006BA463 /* NSStream+SKPSMTPExtensions.m in Sources */,
 				B33BFAFE1B4E3C3B0000EEEF /* SummaryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -391,11 +411,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "SSP Service Tracker/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SSP Service Tracker/SSP Service Tracker-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -404,11 +427,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "SSP Service Tracker/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SSP Service Tracker/SSP Service Tracker-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -478,6 +503,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		B3FF6F291B5DAFD7007037BC /* DBSCDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B3FF6F2A1B5DAFD7007037BC /* DBSCDataModel.xcdatamodel */,
+			);
+			currentVersion = B3FF6F2A1B5DAFD7007037BC /* DBSCDataModel.xcdatamodel */;
+			path = DBSCDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = B396F1601B4B1C37004EE34C /* Project object */;
 }
