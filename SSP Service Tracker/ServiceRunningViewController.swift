@@ -11,49 +11,52 @@ import UIKit
 import Foundation
 
 var timeTotal:String = ""
+var startTime:String = ""
+var startDate:NSDate?
+var endTime:String = ""
+var dateString:String = ""
+var seconds:Int = 0
 
 class ServiceRunningViewController: UIViewController {
 
     var timer = NSTimer()
     
-    var seconds:Int = 0
+    @IBOutlet weak var completeButton: UIButton!
     
     @IBOutlet weak var timeLabel: UILabel!
     
     @IBOutlet weak var toLabel: UILabel!
     @IBOutlet weak var byLabel: UILabel!
     
-    @IBAction func completePressed(sender: AnyObject) {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        scanNumber = "Second"
+        //Sets up back button for the next view
+        var button = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "backPressed")
+        self.navigationItem.leftBarButtonItem = button
         
-        //Asks the user if they're sure to prevent any accidental completions
-        var alert = UIAlertController(title: "Service Completed?", message: "Press \"Yes\" to continue and send email to DBSC", preferredStyle: UIAlertControllerStyle.Alert)
-        
-        //The alert has two choices, "Yes" and "No"
-        alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-            
-            self.performSegueWithIdentifier("serviceCompleted", sender: self)
-            
-            timeTotal = self.timeLabel.text!
-            
-            self.timer.invalidate()
-            
-        }))
-        
-        alert.addAction(UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
-            
-        }))
-        
-        //Presents the alert
-        self.presentViewController(alert, animated:true, completion:nil)
+        //Lays out complete service button
+        completeButton.layer.borderWidth = 0.75
+        completeButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
+        completeButton.layer.cornerRadius = 3.0
     }
-
+    
+    
     override func viewWillAppear(animated: Bool) {
         
-        //Sets labels to match the current service client and provider
-        toLabel.text = "Providing to: " + "\(QRInfo[0])"
-        byLabel.text = "Provided by: " + "\(user)"
+        //Sets the start time as view appears
+        let date = NSDate()
+        startDate = date
+        let formatter = NSDateFormatter()
+        formatter.timeStyle = .ShortStyle
+        startTime = formatter.stringFromDate(date)
+        
+        //Sets the date at beginning of service
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = .MediumStyle
+        dateString = dateFormatter.stringFromDate(date)
+        toLabel.text = "Client: " + "\(client)"
+        byLabel.text = "Provider: " + "\(user)"
         
         timer.invalidate()
         
@@ -72,10 +75,75 @@ class ServiceRunningViewController: UIViewController {
         timeLabel.text = hh + ":" + mm + ":" + ss
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    //Reverts back to first QR code scan, asks if they're sure
+    func backPressed() {
+        scanNumber = "First"
+        
+        let cancelMenu = UIAlertController(title: nil, message: "Are you sure you want to cancel this service? Any work thus far will not be saved", preferredStyle: .ActionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Cancel Service", style: .Destructive, handler: {
+            (alert: UIAlertAction!) -> Void in
+            startDate = nil
+            seconds = 0
+            self.performSegueWithIdentifier("cancelService", sender: self)
+        })
+        
+        let nevermindAction = UIAlertAction(title: "Oops, return to service", style: .Cancel, handler: nil)
+        
+        cancelMenu.addAction(cancelAction)
+        cancelMenu.addAction(nevermindAction)
+        
+        self.presentViewController(cancelMenu, animated: true, completion: nil)
         
     }
+    
+    @IBAction func completePressed(sender: AnyObject) {
+        
+        scanNumber = "Second"
+        
+        //Sets the end time when complete is pressed
+        let date = NSDate()
+        let formatter = NSDateFormatter()
+        formatter.timeStyle = .ShortStyle
+        endTime = formatter.stringFromDate(date)
+        
+        self.performSegueWithIdentifier("serviceCompleted", sender: self)
+        
+        timeTotal = self.timeLabel.text!
+        
+        self.timer.invalidate()
+    }
+    
+    //Sets up what happens if no ID is found
+    @IBAction func lostIDPressed(sender: AnyObject) {
+        
+        var inputTextField: UITextField?
+        
+        var alert = UIAlertController(title: "Missing Client ID Card?", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        if client == "" {
+            alert.addTextFieldWithConfigurationHandler({ (textField) -> Void in
+                inputTextField = textField
+                inputTextField!.placeholder = "Enter client name here"
+                
+            })
+        }
+        
+        alert.addAction(UIAlertAction(title: "Back", style: .Default, handler: nil))
+        
+        alert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: { (alert) -> Void in
+            if client == "" {
+                client = inputTextField!.text
+            }
+            self.performSegueWithIdentifier("lostIDSecondSkip", sender: self)
+            
+        }))
+        
+        self.presentViewController(alert, animated:true, completion:nil)
+
+    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

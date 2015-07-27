@@ -43,5 +43,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>digital-7</string>
+		<string>Let&apos;s go Digital Regular</string>
+		<string>digital-dream.regular</string>
+	</array>
 </dict>
 </plist>

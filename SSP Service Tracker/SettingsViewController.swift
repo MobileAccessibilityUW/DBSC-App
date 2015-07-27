@@ -10,12 +10,31 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     
+    @IBOutlet weak var saveButton: UIButton!
+    
     @IBOutlet weak var nameLabel: UITextField!
+    @IBOutlet weak var emailLabel: UITextField!
     
     //Saves settings
     @IBAction func savePressed(sender: AnyObject) {
         
-        user = nameLabel.text
+        if user != nameLabel.text {
+            
+            user = nameLabel.text
+            
+            NSUserDefaults.standardUserDefaults().setObject(nameLabel.text, forKey: "userName")
+            
+            
+        }
+        
+        if userEmail != emailLabel.text {
+            
+            userEmail = emailLabel.text
+            
+            NSUserDefaults.standardUserDefaults().setObject(emailLabel.text, forKey: "userEmail")
+        }
+        
+        NSUserDefaults.standardUserDefaults().synchronize()
         
     }
     
@@ -26,6 +45,18 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //Lays out save information button
+        saveButton.layer.borderWidth = 0.75
+        saveButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
+        saveButton.layer.cornerRadius = 3.0
+        
+        if user != "" {
+            nameLabel.text = user
+        }
+        if userEmail != "" {
+            emailLabel.text = userEmail
+        }
         
         //navigationController?.prompt = "Please edit your information here"
         

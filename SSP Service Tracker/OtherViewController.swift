@@ -9,8 +9,13 @@
 import UIKit
 
 //This class is responsible for the comment section which appears in multiple places in a container view
-class OtherViewController: UIViewController, UITextViewDelegate {
+@IBDesignable
 
+class OtherViewController: UIViewController, UITextViewDelegate, UITableViewDelegate, UITableViewDataSource {
+
+    @IBInspectable var borderColor:UIColor = UIColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0)
+    @IBInspectable var buttonColor:UIColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0)
+    
     @IBOutlet weak var commentsTable: UITableView!
     
     @IBOutlet weak var commentBox: UITextView!
@@ -20,26 +25,37 @@ class OtherViewController: UIViewController, UITextViewDelegate {
         commentsTable.reloadData()
     }
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //self.view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 1.0, alpha: 1)
+        
         //Gives the container for the comment section a border
-        var borderColor : UIColor = UIColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0)
-        self.view.layer.borderWidth = 0.5
+        
+        self.view.layer.borderWidth = 0.75
         self.view.layer.borderColor = borderColor.CGColor
         self.view.layer.cornerRadius = 5.0
         
         //Border for the comment box
-        commentBox.layer.borderWidth = 0.5
+        commentBox.layer.borderWidth = 1
         commentBox.layer.borderColor = borderColor.CGColor
-        commentBox.layer.cornerRadius = 1.0
         
         //Gets rid of the line between comment cells
         commentsTable.separatorStyle = UITableViewCellSeparatorStyle.None
+        commentsTable.backgroundView = nil
         
+        //Sets up button styling
+        submitButton.layer.borderWidth = 0.75
+        submitButton.layer.borderColor = buttonColor.CGColor
         submitButton.layer.cornerRadius = 3.0
         
         self.commentBox.delegate = self
+        
+        //Sets the height of the row to fit text boxes
+        self.commentsTable.estimatedRowHeight = self.commentsTable.rowHeight
+        self.commentsTable.rowHeight = UITableViewAutomaticDimension
 
     }
     
@@ -95,7 +111,7 @@ class OtherViewController: UIViewController, UITextViewDelegate {
         
         //Uses prototype cell from Interface Builder called "CommentTableCell"
         let tableCell = tableView.dequeueReusableCellWithIdentifier("CommentTableCell", forIndexPath: indexPath) as! CommentTableCell
-        
+        tableCell.userInteractionEnabled = false
         //Sets the text for the cells in the comment table
         tableCell.commentText.text = comments[indexPath.row]
         tableCell.timeLabel.text = commentTimes[indexPath.row]

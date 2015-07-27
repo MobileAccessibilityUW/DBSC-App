@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B30D9BB61B61C41B004E702F /* EmailSend.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30D9BB51B61C41B004E702F /* EmailSend.swift */; };
+		B30D9BBC1B61E048004E702F /* digital-7.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B30D9BBB1B61D393004E702F /* digital-7.ttf */; };
+		B30D9BBE1B61E1EA004E702F /* digital-dream.regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B30D9BBD1B61E14C004E702F /* digital-dream.regular.ttf */; };
+		B336D45E1B6183FF00FF7799 /* InternetReachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B336D45D1B6183FF00FF7799 /* InternetReachable.swift */; };
 		B33BFAFC1B4E2F6D0000EEEF /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33BFAFB1B4E2F6D0000EEEF /* SettingsViewController.swift */; };
 		B33BFAFE1B4E3C3B0000EEEF /* SummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33BFAFD1B4E3C3A0000EEEF /* SummaryViewController.swift */; };
 		B33BFB001B4E437F0000EEEF /* OtherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33BFAFF1B4E437F0000EEEF /* OtherViewController.swift */; };
@@ -38,6 +42,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B30D9BB51B61C41B004E702F /* EmailSend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailSend.swift; sourceTree = "<group>"; };
+		B30D9BB71B61D339004E702F /* Let's go Digital Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Let's go Digital Regular.ttf"; sourceTree = "<group>"; };
+		B30D9BB81B61D393004E702F /* digital-7 (italic).ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-7 (italic).ttf"; sourceTree = "<group>"; };
+		B30D9BB91B61D393004E702F /* digital-7 (mono italic).ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-7 (mono italic).ttf"; sourceTree = "<group>"; };
+		B30D9BBA1B61D393004E702F /* digital-7 (mono).ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-7 (mono).ttf"; sourceTree = "<group>"; };
+		B30D9BBB1B61D393004E702F /* digital-7.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-7.ttf"; sourceTree = "<group>"; };
+		B30D9BBD1B61E14C004E702F /* digital-dream.regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-dream.regular.ttf"; sourceTree = "<group>"; };
+		B336D45D1B6183FF00FF7799 /* InternetReachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetReachable.swift; sourceTree = "<group>"; };
 		B33BFAFB1B4E2F6D0000EEEF /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		B33BFAFD1B4E3C3A0000EEEF /* SummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SummaryViewController.swift; sourceTree = "<group>"; };
 		B33BFAFF1B4E437F0000EEEF /* OtherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +127,14 @@
 				B3536A3A1B50774A00BD3EDD /* QRVideoViewController.swift */,
 				B396F18F1B4B2851004EE34C /* ServiceRunningViewController.swift */,
 				B33BFAFD1B4E3C3A0000EEEF /* SummaryViewController.swift */,
+				B30D9BB51B61C41B004E702F /* EmailSend.swift */,
+				B336D45D1B6183FF00FF7799 /* InternetReachable.swift */,
+				B30D9BB71B61D339004E702F /* Let's go Digital Regular.ttf */,
+				B30D9BBD1B61E14C004E702F /* digital-dream.regular.ttf */,
+				B30D9BB81B61D393004E702F /* digital-7 (italic).ttf */,
+				B30D9BB91B61D393004E702F /* digital-7 (mono italic).ttf */,
+				B30D9BBA1B61D393004E702F /* digital-7 (mono).ttf */,
+				B30D9BBB1B61D393004E702F /* digital-7.ttf */,
 				B3AFE9051B605204006BA463 /* eMail Framework */,
 				B396F1711B4B1C37004EE34C /* Main.storyboard */,
 				B396F1741B4B1C37004EE34C /* Images.xcassets */,
@@ -249,6 +269,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B30D9BBE1B61E1EA004E702F /* digital-dream.regular.ttf in Resources */,
+				B30D9BBC1B61E048004E702F /* digital-7.ttf in Resources */,
 				B396F1731B4B1C37004EE34C /* Main.storyboard in Resources */,
 				B396F1781B4B1C37004EE34C /* LaunchScreen.xib in Resources */,
 				B396F1751B4B1C37004EE34C /* Images.xcassets in Resources */,
@@ -271,6 +293,7 @@
 			files = (
 				B3AFE9011B6051F2006BA463 /* HSK_CFUtilities.m in Sources */,
 				B3FF6F2B1B5DAFD7007037BC /* DBSCDataModel.xcdatamodeld in Sources */,
+				B336D45E1B6183FF00FF7799 /* InternetReachable.swift in Sources */,
 				B396F1701B4B1C37004EE34C /* ViewController.swift in Sources */,
 				B33BFB001B4E437F0000EEEF /* OtherViewController.swift in Sources */,
 				B3AFE9001B6051F2006BA463 /* Base64Transcoder.m in Sources */,
@@ -280,6 +303,7 @@
 				B3AFE9041B6051F2006BA463 /* SKPSMTPMessage.m in Sources */,
 				B3536A3B1B50774A00BD3EDD /* QRVideoViewController.swift in Sources */,
 				B3AFE9021B6051F2006BA463 /* NSData+Base64Additions.m in Sources */,
+				B30D9BB61B61C41B004E702F /* EmailSend.swift in Sources */,
 				B3FF6F281B5CC49C007037BC /* CommentTableCell.swift in Sources */,
 				B3AFE9031B6051F2006BA463 /* NSStream+SKPSMTPExtensions.m in Sources */,
 				B33BFAFE1B4E3C3B0000EEEF /* SummaryViewController.swift in Sources */,

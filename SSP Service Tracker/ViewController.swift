@@ -7,20 +7,17 @@
 //
 
 import UIKit
-
-
+import CoreData
 
 var user:String = ""
-
-var other:String = ""
-
+var userEmail:String = ""
 var QRInfo:[String] = [""]
-
+var client:String = ""
+var clientCode:String = "No ID Card Scanned"
+var clientEmail:String = ""
 var checkedService:String = ""
-
 var scanNumber:String = "First"
-
-var comments:[String] = ["Nevermind they found it", "My client can't find their ID card, I might go ahead an press lost ID so that we can move forward", "They were late by 10 minutes"]
+var comments:[String] = ["Nevermind they found it.", "My client can't find their ID card, I think I'll go ahead and press lost ID so that we can move forward.", "They were late by 10 minutes."]
 var commentTimes:[String] = ["3:46 PM", "3:43 PM", "2:10 PM"]
 
 class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -32,26 +29,122 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     
     @IBOutlet weak var servicesTableView: UITableView!
     
+    @IBOutlet weak var beginServiceButton: UIButton!
+    
+    //Start button pressed
     @IBAction func verifyPressed(sender: AnyObject) {
         
         if checkedService == "" {
-            
             errorLabel.alpha = 1
-            
         } else {
-        
             performSegueWithIdentifier("takeQRShot", sender: self)
         }
     }
     
+    //Allows user to continue by pressing "Missing ID?" and entering their client's name
+    @IBAction func lostIDPressed(sender: AnyObject) {
+        
+        var inputTextField: UITextField?
+        
+        var alert = UIAlertController(title: "Missing Client ID Card?", message: "Please enter your client's name and press \"Continue\" if so", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        alert.addTextFieldWithConfigurationHandler({ (textField) -> Void in
+            inputTextField = textField
+            inputTextField!.placeholder = "Enter client name here"
+            
+        })
+        
+        alert.addAction(UIAlertAction(title: "Back", style: .Default, handler: nil))
+        
+        alert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: { (alert) -> Void in
+            
+            client = inputTextField!.text
+            self.performSegueWithIdentifier("lostIDSkip", sender: self)
+            
+        }))
+        
+        self.presentViewController(alert, animated:true, completion:nil)
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Resets checked service when page is reloaded
+        checkedService = ""
+        
+        //self.view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 1.0, alpha: 1)
+        
+        //Gets rid of the line between comment cells
+        servicesTableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        servicesTableView.rowHeight = 32
+        
         //Registers the default "cell"
         servicesTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
-        //commentsTableView.registerNib(UINib(nibName: "CommentCell", bundle: nil), forCellReuseIdentifier: "commentCell")
+        //Use core data to get user and user email address
+        if let storedName:AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("userName") {
+            
+            user = storedName as! String
+        }
+        if let storedEmail:AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("userEmail") {
+                
+            userEmail = storedEmail as! String
+        }
+        
+        //Lays out begin service button
+        beginServiceButton.layer.borderWidth = 0.75
+        beginServiceButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
+        beginServiceButton.layer.cornerRadius = 3.0
+    
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        if Reachability.isConnectedToNetwork() == true {
+            
+            var appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            
+            var context:NSManagedObjectContext = appDel.managedObjectContext!
+            
+            var request = NSFetchRequest(entityName: "Email")
+            
+            request.returnsObjectsAsFaults = false
+            
+            var emails = context.executeFetchRequest(request, error: nil)
+            
+            println(emails)
+            
+            if(emails?.count > 0) {
+                
+                for email: AnyObject in emails! {
+                    
+                    if let toEmail = email.valueForKey("toEmail") as? String {
+                        
+                        if let subject = email.valueForKey("subject") as? String {
+                            
+                            if let content = email.valueForKey("content") as? String {
+                                
+                                EmailSend.sendEmail(toEmail, subject: subject, content: content)
+                                
+                                context.deleteObject(email as! NSManagedObject)
+                            }
+                        }
+                    }
+                    context.save(nil)
+                }
+                
+                var alert = UIAlertController(title: "Past services processed", message: "Past services performed without internet access have now been processed with DBSC", preferredStyle: UIAlertControllerStyle.Alert)
+                
+                alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: nil))
+                
+                self.presentViewController(alert, animated:true, completion:nil)
+                
+            } else {
+                
+                println("No results")
+            }
+        }
     }
     
     //Closes keyboard when touched outside

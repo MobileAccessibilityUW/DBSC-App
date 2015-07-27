@@ -24,14 +24,6 @@ class QRVideoViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //Sets up back button for the next view
-        var button = UIBarButtonItem(title: "Scan", style: UIBarButtonItemStyle.Plain, target: self, action: "changeScanNumber")
-        self.navigationItem.backBarButtonItem = button
-    }
-    
-    //Reverts back to the first QR code scan
-    func changeScanNumber() {
-        scanNumber = "First"
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -102,30 +94,41 @@ class QRVideoViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             if metadataObj.stringValue != nil {
                 var stringQR = metadataObj.stringValue
                 
-                QRArray = stringQR!.componentsSeparatedByString(" #")
+                //Parses through different parts of the QR Code, separating by a character
+                QRArray = stringQR!.componentsSeparatedByString(", ")
                 messageLabel.text = QRArray[0]
-                println(QRArray)
                 
-                //Performs a different segue depending on whether it's the first or second scan
-                if scanNumber == "First" {
+                //Checks to make sure format was correct (3 elements separated by ", ")
+                if QRArray.count == 3 {
                     
-                    captureSession?.stopRunning()
-                    
-                    QRInfo = QRArray
-                    self.performSegueWithIdentifier("QRRecognized", sender: self)
-                    
-                } else {
-                    
-                    if QRInfo == QRArray {
+                    //Performs a different segue depending on whether it's the first or second scan
+                    if scanNumber == "First" {
                         
                         captureSession?.stopRunning()
-                        
-                        self.performSegueWithIdentifier("secondQRRecognized", sender: self)
+                        QRInfo = QRArray
+                        client = QRArray[0]
+                        clientCode = QRArray[1]
+                        clientEmail = QRArray[2]
+                        self.performSegueWithIdentifier("QRRecognized", sender: self)
                         
                     } else {
                         
-                        messageLabel.text = "Please scan the same ID card"
+                        if QRInfo == QRArray {
+                            
+                            captureSession?.stopRunning()
+                            scanNumber = "First"
+                            seconds = 0
+                            startDate = nil
+                            self.performSegueWithIdentifier("secondQRRecognized", sender: self)
+                            
+                        } else {
+                            
+                            messageLabel.text = "Please scan the same ID card"
+                        }
                     }
+                } else {
+                    
+                    messageLabel.text = "Please scan a valid DBSC ID card"
                 }
             }
         }
