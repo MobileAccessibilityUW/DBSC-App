@@ -73,6 +73,17 @@ class ServiceRunningViewController: UIViewController {
         var mm = String(format: "%02d", (seconds % 3600) / 60)
         var ss = String(format: "%02d", (seconds % 3600) % 60)
         timeLabel.text = hh + ":" + mm + ":" + ss
+        
+        //If we wanted mm:ss time before an hour had passed.
+        /*if seconds >= 3600 {
+        
+            timeLabel.text = hh + ":" + mm + ":" + ss
+            
+        } else {
+            
+            timeLabel.text = mm + ":" + ss
+            
+        }*/
     }
     
     
@@ -130,7 +141,7 @@ class ServiceRunningViewController: UIViewController {
             })
         }
         
-        alert.addAction(UIAlertAction(title: "Back", style: .Default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
         
         alert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: { (alert) -> Void in
             if client == "" {

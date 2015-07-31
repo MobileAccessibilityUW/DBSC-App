@@ -17,8 +17,15 @@ var clientCode:String = "No ID Card Scanned"
 var clientEmail:String = ""
 var checkedService:String = ""
 var scanNumber:String = "First"
-var comments:[String] = ["Nevermind they found it.", "My client can't find their ID card, I think I'll go ahead and press lost ID so that we can move forward.", "They were late by 10 minutes."]
-var commentTimes:[String] = ["3:46 PM", "3:43 PM", "2:10 PM"]
+//var comments:[String] = []
+//var commentTimes:[String] = []
+//var comments:[String] = ["Nevermind they found it.", "My client can't find their ID card, I think I'll go ahead and press lost ID so that we can move forward.", "They were late by 10 minutes."]
+//var commentTimes:[String] = ["3:46 PM", "3:43 PM", "2:10 PM"]
+var comments:[String] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"]
+var commentTimes:[String] = ["3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM","3:46 PM"]
+
+var dbscEmail: String = "dbscemailer@gmail.com"
+var services: [(String, String)] = []
 
 class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
@@ -35,8 +42,21 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     @IBAction func verifyPressed(sender: AnyObject) {
         
         if checkedService == "" {
+            errorLabel.text = "Please select a service"
             errorLabel.alpha = 1
+        
+        } else if user == "" {
+        
+            errorLabel.text = "Please enter your name in \"Settings\""
+            errorLabel.alpha = 1
+            
+        } else if userEmail == "" {
+        
+            errorLabel.text = "Please enter your email in \"Settings\""
+            errorLabel.alpha = 1
+            
         } else {
+
             performSegueWithIdentifier("takeQRShot", sender: self)
         }
     }
@@ -46,15 +66,15 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         
         var inputTextField: UITextField?
         
-        var alert = UIAlertController(title: "Missing Client ID Card?", message: "Please enter your client's name and press \"Continue\" if so", preferredStyle: UIAlertControllerStyle.Alert)
+        var alert = UIAlertController(title: "Missing Client ID Card?", message: "Please enter your client's name and press \"Continue\" if so.", preferredStyle: UIAlertControllerStyle.Alert)
         
         alert.addTextFieldWithConfigurationHandler({ (textField) -> Void in
             inputTextField = textField
             inputTextField!.placeholder = "Enter client name here"
-            
+            inputTextField!.addTarget(self, action: "textChanged:", forControlEvents: .EditingChanged)
         })
         
-        alert.addAction(UIAlertAction(title: "Back", style: .Default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
         
         alert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: { (alert) -> Void in
             
@@ -63,8 +83,20 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
             
         }))
         
+        (alert.actions[1] as! UIAlertAction).enabled = false
+        
+
+        
         self.presentViewController(alert, animated:true, completion:nil)
         
+    }
+    
+    func textChanged(sender:AnyObject) {
+        let tf = sender as! UITextField
+        var resp : UIResponder = tf
+        while !(resp is UIAlertController) { resp = resp.nextResponder()! }
+        let alert = resp as! UIAlertController
+        (alert.actions[1] as! UIAlertAction).enabled = (tf.text != "")
     }
     
     override func viewDidLoad() {
@@ -111,6 +143,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
             
             request.returnsObjectsAsFaults = false
             
+            request.predicate = NSPredicate(format: "sent = %@", false)
+            
             var emails = context.executeFetchRequest(request, error: nil)
             
             println(emails)
@@ -119,17 +153,17 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
                 
                 for email: AnyObject in emails! {
                     
-                    if let toEmail = email.valueForKey("toEmail") as? String {
+                    if let clientEmail = email.valueForKey("clientEmail") as? String, userEmail = email.valueForKey("userEmail") as? String, subject = email.valueForKey("subject") as? String, content = email.valueForKey("content") as? String, contentwCode = email.valueForKey("contentwCode") as? String {
                         
-                        if let subject = email.valueForKey("subject") as? String {
+                        if EmailSend.sendEmail(userEmail, subject: subject, content: "Hello from DBSC,\n\n" + content) && EmailSend.sendEmail(clientEmail, subject: subject, content: "Hello from DBSC,\n\n" + content) && EmailSend.sendEmail(dbscEmail, subject: subject, content: contentwCode) {
                             
-                            if let content = email.valueForKey("content") as? String {
-                                
-                                EmailSend.sendEmail(toEmail, subject: subject, content: content)
-                                
-                                context.deleteObject(email as! NSManagedObject)
-                            }
+                            email.setValue(true, forKey: "sent")
                         }
+                        
+                    } else {
+                        
+                        //context.deleteObject(email as! NSManagedObject)
+                        
                     }
                     context.save(nil)
                 }

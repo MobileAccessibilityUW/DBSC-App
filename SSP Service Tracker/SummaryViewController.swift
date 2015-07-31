@@ -9,74 +9,110 @@
 import Foundation
 import UIKit
 
-class SummaryViewController: UIViewController {
+class SummaryViewController: UIViewController, UIScrollViewDelegate {
     
+    var emailSubject:String?
+    var emailContent:String?
+    var emailContentwCode:String?
 
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var processButton: UIButton!
-    @IBOutlet weak var totalTimeLabel: UILabel!
-    @IBOutlet weak var toLabel: UILabel!
-    @IBOutlet weak var byLabel: UILabel!
-    @IBOutlet weak var servicesLabel: UILabel!
+    @IBOutlet weak var serviceTextView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        servicesLabel.sizeToFit()
-        
-        //Sets text labels to match client and provider
-        toLabel.text = "Client: \(client)"
-        byLabel.text = "Provider: \(user)"
-        servicesLabel.text = "Service provided: " + checkedService
-        
-        //Hides back button since the service has now been finalized
-        self.navigationItem.setHidesBackButton(true, animated: true)
-        
-        totalTimeLabel.text = "Total Time: \(timeTotal)"
-        
-        //Lays out complete service button
-        processButton.layer.borderWidth = 0.75
-        processButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
-        processButton.layer.cornerRadius = 3.0
-        
-    }
-    
-    //Sends the user back to the Main Menu after the service has been completed
-    @IBAction func backPressed(sender: AnyObject) {
-        
+        //Sets abbreviation of service
         var checkedServiceAbbr : String = {
             if checkedService == "Communication Facilitator (CF)" {
                 return "CF"
             } else {
                 return "SSP"
             }
-        }()
-        
-        var emailSubject:String = "\(user) served \(client) as a \(checkedServiceAbbr)"
-        
-        var commentsFormatted: String = {
-            var commentsPlusDates: String = ""
-            for (var i = 0; i < comments.count; i++) {
-                commentsPlusDates += "\n-\"\(comments[i])\" at \(commentTimes[i])"
-            }
-            return commentsPlusDates
             }()
         
-        var emailContent:String = "Hello from DBSC,\n\n Comments: \(commentsFormatted) \n\nDate: \(dateString) \nStart Time: \(startTime) \nEnd Time: \(endTime) \nTotal Time: \(timeTotal) \n\nService: \(checkedService) \nProvider: \(user) \nClient: \(client)"
+        //Formats all the text needed for the email and the display on the page:
+        emailSubject = "\(user) served \(client) as a \(checkedServiceAbbr) on \(dateString)"
         
-        var emailContentwCode:String = "\(emailContent) \nClient Code: \(clientCode)\n__\n\nThis is your digital record of services provided through DBSC. If you don't believe you should have recieved this email, or you find something inaccurate in the content, please email us (the Deaf-Blind Service Center) immediately at " //Fill in with email for DBSC
+        var commentsFormatted: String = {
+            if comments.count == 0 {
+                return ""
+            } else {
+                var commentsPlusDates: String = ""
+                for (var i = 0; i < comments.count; i++) {
+                    commentsPlusDates += "\n- \(commentTimes[i]): \"\(comments[i])\""
+                }
+                return "Comments:" + commentsPlusDates + "\n\n"
+            }
+            }()
+        emailContent = "\(commentsFormatted)Date: \(dateString) \nStart Time: \(startTime) \nEnd Time: \(endTime) \nTotal Time: \(timeTotal) \n\nService: \(checkedService) \nProvider: \(user) \nClient: \(client)"
+        
+        emailContentwCode = "\(emailContent) \nClient Code: \(clientCode)\n__\n\nThis is your digital record of services provided through DBSC. If you don't believe you should have recieved this email, or you find something inaccurate in the content, please email us (the Deaf-Blind Service Center) immediately at " //Fill in with email for DBSC
+        
+        var serviceTextViewText:String = "Record of service preview:\n" + emailContent!
+        
+        //Using attributedString allows the use of bold lettering for the first line.
+        var attributedText: NSMutableAttributedString = NSMutableAttributedString(string:serviceTextViewText)
+        
+        //Sets the font size to 14 for the rest of the string since the attibutedText of a textview has a smaller font size.
+        attributedText.addAttributes([NSFontAttributeName: UIFont.systemFontOfSize(14)], range: NSRange(location: 0, length: attributedText.length))
+        
+        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(14)], range: NSRange(location: 0, length: 26))
+        
+        serviceTextView.attributedText = attributedText
+
+        //Lays out complete service button
+        processButton.layer.borderWidth = 0.75
+        processButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
+        processButton.layer.cornerRadius = 3.0
+        
+        //Hides back button since the service has now been finalized
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        
+        //Layout for the service text view
+        var borderColor : UIColor = UIColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0)
+        serviceTextView.layer.cornerRadius = 6
+        serviceTextView.layer.borderWidth = 0.5
+        serviceTextView.layer.borderColor = borderColor.CGColor
+        serviceTextView.textContainer.lineFragmentPadding = 0
+        serviceTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
+    }
+    
+    //scrollView has to be set up here rather than in viewDidLoad since here the dimensions of the subviews have surely been set up so the height calculations work out
+    override func viewDidLayoutSubviews() {
+
+        scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, serviceTextView.frame.size.height + 70)
+        
+    }
+    
+    //Sends the user back to the Main Menu after the service has been completed
+    @IBAction func backPressed(sender: AnyObject) {
+        
+        comments = []
         
         //Checks whether connected to the internet. If true, send emails. If not, store them.
-        
         if Reachability.isConnectedToNetwork() == true {
             
             println("Internet connection OK")
             
-            EmailSend.sendEmail(userEmail, subject: emailSubject, content: emailContentwCode)
-            EmailSend.sendEmail(clientEmail, subject: emailSubject, content: emailContent)
-            //EmailSend.sendEmail("harguscj@whitman.edu", subject: emailSubject, content: emailContent)
+            var allSent:Bool = false
             
-            //Alert to end and notify of email
-            var alert = UIAlertController(title: "Service Processed!", message: "An email has been sent to you and your client", preferredStyle: UIAlertControllerStyle.Alert)
+            var alert = UIAlertController()
+            
+            if EmailSend.sendEmail(userEmail, subject: emailSubject!, content: "Hello from DBSC,\n\n" + emailContent!) && EmailSend.sendEmail(clientEmail, subject: emailSubject!, content: "Hello from DBSC,\n\n" + emailContent!) && EmailSend.sendEmail(dbscEmail, subject: emailSubject!, content: emailContentwCode!) {
+                
+                allSent = true
+                
+                //Alert to end and notify of email
+                alert = UIAlertController(title: "Service Processed!", message: "An email has been sent to you and your client", preferredStyle: UIAlertControllerStyle.Alert)
+                
+            } else {
+                
+                alert = UIAlertController(title: "Storing information for later", message: "Unsteady internet access. Please run the app again when access is reliable to automatically process this service", preferredStyle: UIAlertControllerStyle.Alert)
+                
+            }
+            
+            EmailSend.storeEmail(userEmail, clientEmail: clientEmail, subject: emailSubject!, content: emailContent!, contentwCode: emailContentwCode!, sent: allSent)
             
             alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: { (action) -> Void in
                 
@@ -90,9 +126,7 @@ class SummaryViewController: UIViewController {
             
             println("Internet connection FAILED")
             
-            EmailSend.storeEmail(userEmail, subject: emailSubject, content: emailContentwCode)
-            EmailSend.storeEmail(clientEmail, subject: emailSubject, content: emailContent)
-            //EmailSend.storeEmail(userEmail, subject: emailSubject, content: emailContent)
+            EmailSend.storeEmail(userEmail, clientEmail: clientEmail, subject: self.emailSubject!, content: self.emailContent!, contentwCode: self.emailContentwCode!, sent: false)
             
             //Alert to describe what to do when internet access is regained
             var alert = UIAlertController(title: "Storing information for when internet access returns", message: "No internet access. Please run app again when access is restored to automatically process this service", preferredStyle: UIAlertControllerStyle.Alert)

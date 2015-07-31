@@ -13,7 +13,7 @@ import CoreData
 public class EmailSend {
     
     //Sends an email using the SKPSMTPMessage Framework in "eMail Framework" Folder
-    class func sendEmail(sendTo:String, subject:String, content: String) {
+    class func sendEmail(sendTo:String, subject:String, content: String) -> Bool {
         
         var parts: NSDictionary = [
             "kSKPSMTPPartContentTypeKey": "text/plain; charset=UTF-8",
@@ -21,9 +21,9 @@ public class EmailSend {
         ]
         
         var mail = SKPSMTPMessage()
-        mail.fromEmail = "dbscemailer@gmail.com"
+        mail.fromEmail = dbscEmail
         mail.requiresAuth = true
-        mail.login = "dbscemailer@gmail.com"
+        mail.login = dbscEmail
         mail.pass = "t4dc1ICPsS"
         
         mail.subject = subject
@@ -34,12 +34,16 @@ public class EmailSend {
         mail.parts = [parts]
         mail.toEmail = sendTo
         
-        mail.send()
+        if mail.send() == true {
+            return true
+        } else {
+            return false
+        }
         
     }
     
     //Stores the email in core data for "Email" entity
-    class func storeEmail(sendTo:String, subject:String, content: String) {
+    class func storeEmail(userEmail:String, clientEmail:String, subject:String, content: String, contentwCode:String, sent:Bool) {
         
         let appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
@@ -47,9 +51,13 @@ public class EmailSend {
         
         let newEmail = NSEntityDescription.insertNewObjectForEntityForName("Email", inManagedObjectContext: context) as! NSManagedObject
         
+        newEmail.setValue(clientEmail, forKey: "userEmail")
+        newEmail.setValue(userEmail, forKey: "clientEmail")
         newEmail.setValue(subject, forKey: "subject")
         newEmail.setValue(content, forKey: "content")
-        newEmail.setValue(sendTo, forKey: "toEmail")
+        newEmail.setValue(contentwCode, forKey: "contentwCode")
+        newEmail.setValue(sent, forKey: "sent")
+        
         
         //Saves context, throws error if there's a problem
         var error: NSError?

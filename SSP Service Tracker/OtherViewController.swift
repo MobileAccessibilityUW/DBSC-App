@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 
 //This class is responsible for the comment section which appears in multiple places in a container view
 @IBDesignable
@@ -51,11 +52,11 @@ class OtherViewController: UIViewController, UITextViewDelegate, UITableViewDele
         submitButton.layer.borderColor = buttonColor.CGColor
         submitButton.layer.cornerRadius = 3.0
         
-        self.commentBox.delegate = self
+        commentBox.delegate = self
         
         //Sets the height of the row to fit text boxes
-        self.commentsTable.estimatedRowHeight = self.commentsTable.rowHeight
-        self.commentsTable.rowHeight = UITableViewAutomaticDimension
+        commentsTable.estimatedRowHeight = self.commentsTable.rowHeight
+        commentsTable.rowHeight = UITableViewAutomaticDimension
 
     }
     
@@ -100,18 +101,12 @@ class OtherViewController: UIViewController, UITextViewDelegate, UITableViewDele
         return 1
     }
     
-    /*
-    func configureTableView() {
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 160.0
-    }
-    */
-    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         //Uses prototype cell from Interface Builder called "CommentTableCell"
         let tableCell = tableView.dequeueReusableCellWithIdentifier("CommentTableCell", forIndexPath: indexPath) as! CommentTableCell
-        tableCell.userInteractionEnabled = false
+        tableCell.userInteractionEnabled = true
+        tableCell.selectionStyle = .None
         //Sets the text for the cells in the comment table
         tableCell.commentText.text = comments[indexPath.row]
         tableCell.timeLabel.text = commentTimes[indexPath.row]
@@ -120,10 +115,22 @@ class OtherViewController: UIViewController, UITextViewDelegate, UITableViewDele
         
     }
     
+    
     //As many rows in the table as there are comments
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return comments.count
+        
+    }
+    
+    //Allows the user to delete comments
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            
+            comments.removeAtIndex(indexPath.row)
+            commentsTable.deleteRowsAtIndexPaths([indexPath],  withRowAnimation: UITableViewRowAnimation.Automatic)
+        }
         
     }
     

@@ -10,6 +10,8 @@
 		B30D9BB61B61C41B004E702F /* EmailSend.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30D9BB51B61C41B004E702F /* EmailSend.swift */; };
 		B30D9BBC1B61E048004E702F /* digital-7.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B30D9BBB1B61D393004E702F /* digital-7.ttf */; };
 		B30D9BBE1B61E1EA004E702F /* digital-dream.regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B30D9BBD1B61E14C004E702F /* digital-dream.regular.ttf */; };
+		B30D9BEE1B6889C6004E702F /* ServicesLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30D9BED1B6889C6004E702F /* ServicesLogViewController.swift */; };
+		B30D9BF01B688C14004E702F /* PastServiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30D9BEF1B688C14004E702F /* PastServiceCell.swift */; };
 		B336D45E1B6183FF00FF7799 /* InternetReachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B336D45D1B6183FF00FF7799 /* InternetReachable.swift */; };
 		B33BFAFC1B4E2F6D0000EEEF /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33BFAFB1B4E2F6D0000EEEF /* SettingsViewController.swift */; };
 		B33BFAFE1B4E3C3B0000EEEF /* SummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33BFAFD1B4E3C3A0000EEEF /* SummaryViewController.swift */; };
@@ -49,6 +51,8 @@
 		B30D9BBA1B61D393004E702F /* digital-7 (mono).ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-7 (mono).ttf"; sourceTree = "<group>"; };
 		B30D9BBB1B61D393004E702F /* digital-7.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-7.ttf"; sourceTree = "<group>"; };
 		B30D9BBD1B61E14C004E702F /* digital-dream.regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-dream.regular.ttf"; sourceTree = "<group>"; };
+		B30D9BED1B6889C6004E702F /* ServicesLogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServicesLogViewController.swift; path = ../ServicesLogViewController.swift; sourceTree = "<group>"; };
+		B30D9BEF1B688C14004E702F /* PastServiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PastServiceCell.swift; sourceTree = "<group>"; };
 		B336D45D1B6183FF00FF7799 /* InternetReachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetReachable.swift; sourceTree = "<group>"; };
 		B33BFAFB1B4E2F6D0000EEEF /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		B33BFAFD1B4E3C3A0000EEEF /* SummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SummaryViewController.swift; sourceTree = "<group>"; };
@@ -121,6 +125,8 @@
 			children = (
 				B396F16D1B4B1C37004EE34C /* AppDelegate.swift */,
 				B396F16F1B4B1C37004EE34C /* ViewController.swift */,
+				B30D9BED1B6889C6004E702F /* ServicesLogViewController.swift */,
+				B30D9BEF1B688C14004E702F /* PastServiceCell.swift */,
 				B33BFAFF1B4E437F0000EEEF /* OtherViewController.swift */,
 				B3FF6F271B5CC49C007037BC /* CommentTableCell.swift */,
 				B33BFAFB1B4E2F6D0000EEEF /* SettingsViewController.swift */,
@@ -296,8 +302,10 @@
 				B336D45E1B6183FF00FF7799 /* InternetReachable.swift in Sources */,
 				B396F1701B4B1C37004EE34C /* ViewController.swift in Sources */,
 				B33BFB001B4E437F0000EEEF /* OtherViewController.swift in Sources */,
+				B30D9BF01B688C14004E702F /* PastServiceCell.swift in Sources */,
 				B3AFE9001B6051F2006BA463 /* Base64Transcoder.m in Sources */,
 				B396F16E1B4B1C37004EE34C /* AppDelegate.swift in Sources */,
+				B30D9BEE1B6889C6004E702F /* ServicesLogViewController.swift in Sources */,
 				B396F1901B4B2851004EE34C /* ServiceRunningViewController.swift in Sources */,
 				B33BFAFC1B4E2F6D0000EEEF /* SettingsViewController.swift in Sources */,
 				B3AFE9041B6051F2006BA463 /* SKPSMTPMessage.m in Sources */,
