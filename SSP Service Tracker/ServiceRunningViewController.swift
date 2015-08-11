@@ -7,13 +7,13 @@
 //
 
 import UIKit
-
+import CoreData
 import Foundation
 
-var timeTotal:String = ""
+var timeTotal:String = "Unknown"
 var startTime:String = ""
-var startDate:NSDate?
-var endTime:String = ""
+var startDate:NSDate? = nil
+var endTime:String = "Unknown"
 var dateString:String = ""
 var seconds:Int = 0
 
@@ -27,9 +27,13 @@ class ServiceRunningViewController: UIViewController {
     
     @IBOutlet weak var toLabel: UILabel!
     @IBOutlet weak var byLabel: UILabel!
+    @IBOutlet weak var startTimeLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //Attempt at changing accessibility label to inform blind user that an ID card was scanned successfully
+        //navigationController?.navigationBar.topItem?.accessibilityLabel = "ID card scanned"
         
         //Sets up back button for the next view
         var button = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "backPressed")
@@ -39,26 +43,37 @@ class ServiceRunningViewController: UIViewController {
         completeButton.layer.borderWidth = 0.75
         completeButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
         completeButton.layer.cornerRadius = 3.0
+        
     }
-    
     
     override func viewWillAppear(animated: Bool) {
         
-        //Sets the start time as view appears
-        let date = NSDate()
-        startDate = date
-        let formatter = NSDateFormatter()
-        formatter.timeStyle = .ShortStyle
-        startTime = formatter.stringFromDate(date)
+        seconds = secondsSinceStart()
         
-        //Sets the date at beginning of service
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = .MediumStyle
-        dateString = dateFormatter.stringFromDate(date)
-        toLabel.text = "Client: " + "\(client)"
-        byLabel.text = "Provider: " + "\(user)"
+        if startDate == nil {
+            //Sets the start time as view appears
+            let date = NSDate()
+            startDate = date
+            let formatter = NSDateFormatter()
+            formatter.timeStyle = .ShortStyle
+            startTime = formatter.stringFromDate(date)
+            
+            //Sets the date at beginning of service
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateStyle = .MediumStyle
+            dateString = dateFormatter.stringFromDate(date)
+            toLabel.text = "Client: " + "\(client)"
+            byLabel.text = "Provider: " + "\(user)"
+            startTimeLabel.text = "Start Time: \(startTime)"
+            
+            timer.invalidate()
+            
+        }
         
-        timer.invalidate()
+        if storedEmail == nil {
+            
+            EmailSend.storeEmail()
+        }
         
         //Sets timer to start counting and calling "changeLabel"
         timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "changeLabel", userInfo: nil, repeats: true)
@@ -89,14 +104,25 @@ class ServiceRunningViewController: UIViewController {
     
     //Reverts back to first QR code scan, asks if they're sure
     func backPressed() {
-        scanNumber = "First"
         
-        let cancelMenu = UIAlertController(title: nil, message: "Are you sure you want to cancel this service? Any work thus far will not be saved", preferredStyle: .ActionSheet)
+        let cancelMenu = UIAlertController(title: nil, message: "Are you sure you want to cancel this service? Any work thus far will not be saved.", preferredStyle: .ActionSheet)
         
         let cancelAction = UIAlertAction(title: "Cancel Service", style: .Destructive, handler: {
             (alert: UIAlertAction!) -> Void in
+            
             startDate = nil
             seconds = 0
+            scanNumber = "First"
+            self.timer.invalidate()
+            
+            //Deletes email if service is cancelled
+            let appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let context:NSManagedObjectContext = appDel.managedObjectContext!
+            if storedEmail != nil {
+                context.deleteObject(storedEmail!)
+                storedEmail = nil
+            }
+            
             self.performSegueWithIdentifier("cancelService", sender: self)
         })
         
@@ -118,12 +144,13 @@ class ServiceRunningViewController: UIViewController {
         let formatter = NSDateFormatter()
         formatter.timeStyle = .ShortStyle
         endTime = formatter.stringFromDate(date)
-        
-        self.performSegueWithIdentifier("serviceCompleted", sender: self)
-        
+                
         timeTotal = self.timeLabel.text!
         
         self.timer.invalidate()
+        
+        self.performSegueWithIdentifier("serviceCompleted", sender: self)
+        
     }
     
     //Sets up what happens if no ID is found
@@ -161,7 +188,10 @@ class ServiceRunningViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        self.view.endEditing(true)
+    }
+    
     /*
     // MARK: - Navigation
 

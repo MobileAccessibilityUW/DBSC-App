@@ -23,6 +23,7 @@
                     <items>
                         <navigationItem title="Main Menu" id="KXf-AG-MbH">
                             <barButtonItem key="leftBarButtonItem" title="Settings" id="4rV-43-yvv"/>
+                            <barButtonItem key="rightBarButtonItem" title="Log" id="ZT9-pN-2R8"/>
                         </navigationItem>
                     </items>
                 </navigationBar>

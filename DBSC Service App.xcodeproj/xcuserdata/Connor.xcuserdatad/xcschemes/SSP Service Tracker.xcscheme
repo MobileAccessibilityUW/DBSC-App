@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B396F1671B4B1C37004EE34C"
-               BuildableName = "SSP Service Tracker.app"
-               BlueprintName = "SSP Service Tracker"
-               ReferencedContainer = "container:SSP Service Tracker.xcodeproj">
+               BuildableName = "DBSC Service App.app"
+               BlueprintName = "DBSC Service App"
+               ReferencedContainer = "container:DBSC Service App.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B396F17C1B4B1C37004EE34C"
-               BuildableName = "SSP Service TrackerTests.xctest"
-               BlueprintName = "SSP Service TrackerTests"
-               ReferencedContainer = "container:SSP Service Tracker.xcodeproj">
+               BuildableName = "DBSC Service AppTests.xctest"
+               BlueprintName = "DBSC Service AppTests"
+               ReferencedContainer = "container:DBSC Service App.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B396F17C1B4B1C37004EE34C"
-               BuildableName = "SSP Service TrackerTests.xctest"
-               BlueprintName = "SSP Service TrackerTests"
-               ReferencedContainer = "container:SSP Service Tracker.xcodeproj">
+               BuildableName = "DBSC Service AppTests.xctest"
+               BlueprintName = "DBSC Service AppTests"
+               ReferencedContainer = "container:DBSC Service App.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B396F1671B4B1C37004EE34C"
-            BuildableName = "SSP Service Tracker.app"
-            BlueprintName = "SSP Service Tracker"
-            ReferencedContainer = "container:SSP Service Tracker.xcodeproj">
+            BuildableName = "DBSC Service App.app"
+            BlueprintName = "DBSC Service App"
+            ReferencedContainer = "container:DBSC Service App.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -77,9 +77,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B396F1671B4B1C37004EE34C"
-            BuildableName = "SSP Service Tracker.app"
-            BlueprintName = "SSP Service Tracker"
-            ReferencedContainer = "container:SSP Service Tracker.xcodeproj">
+            BuildableName = "DBSC Service App.app"
+            BlueprintName = "DBSC Service App"
+            ReferencedContainer = "container:DBSC Service App.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -96,9 +96,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B396F1671B4B1C37004EE34C"
-            BuildableName = "SSP Service Tracker.app"
-            BlueprintName = "SSP Service Tracker"
-            ReferencedContainer = "container:SSP Service Tracker.xcodeproj">
+            BuildableName = "DBSC Service App.app"
+            BlueprintName = "DBSC Service App"
+            ReferencedContainer = "container:DBSC Service App.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -13,6 +13,8 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
 
     @IBOutlet weak var pastServicesTable: UITableView!
     
+    var services: [(String, String, Bool)] = []
+    
     override func viewDidLoad() {
         
         pastServicesTable.estimatedRowHeight = self.pastServicesTable.rowHeight
@@ -25,11 +27,16 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewWillAppear(animated: Bool) {
         
+        services = []
+        
         var appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         var context:NSManagedObjectContext = appDel.managedObjectContext!
         
         var request = NSFetchRequest(entityName: "Email")
+        
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
+        request.sortDescriptors = [sortDescriptor]
         
         request.returnsObjectsAsFaults = false
         
@@ -39,13 +46,15 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
         
         if(emails?.count > 0) {
             
-            emails = reverse(emails!)
+            //emails = emails.sort({ ($0.valueForKey("date") as! NSDate).compare($1.valueForKey("date") as! NSDate) == NSComparisonResult.OrderedAscending })
             
             for email:AnyObject in emails! {
             
-                services.append(email.valueForKey("content") as! String, email.valueForKey("subject") as! String)
+                services.append(email.valueForKey("content") as! String, email.valueForKey("subject") as! String, email.valueForKey("sent") as! Bool)
             }
         }
+        
+        pastServicesTable.reloadData()
         
         //println(emails)
         
@@ -57,18 +66,30 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
         let tableCell = tableView.dequeueReusableCellWithIdentifier("serviceCell", forIndexPath: indexPath) as! PastServiceCell
         tableCell.userInteractionEnabled = true
         tableCell.selectionStyle = .None
-        //Sets the text for the cells in the comment table
-        tableCell.serviceTextView.text = services[indexPath.row].0
-        tableCell.serviceTitleView.text = services[indexPath.row].1
-        return tableCell
         
+        //Sets the text for the cells in the comment table
+        if services.count == 0 {
+            
+            tableCell.serviceTextView.alpha = 0
+            tableCell.serviceTitleView.text = "No past services recorded."
+        }
+        else {
+            
+            tableCell.serviceTextView.text = services[indexPath.row].0
+            tableCell.serviceTitleView.text = services[indexPath.row].1
+            if services[indexPath.row].2 == true {
+                
+                tableCell.sentTextView.alpha = 1
+            }
+        }
+        return tableCell
     }
     
     
     //As many rows in the table as there are comments
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return services.count
+        return max(1, services.count)
         
     }
     

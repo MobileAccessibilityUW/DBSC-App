@@ -37,7 +37,7 @@ class CommentTableCell: UITableViewCell {
         commentText.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
         
     }
-
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

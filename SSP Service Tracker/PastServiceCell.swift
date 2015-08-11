@@ -12,6 +12,7 @@ class PastServiceCell: UITableViewCell {
 
     @IBOutlet weak var serviceTextView: UITextView!
     @IBOutlet weak var serviceTitleView: UITextView!
+    @IBOutlet weak var sentTextView: UITextView!
     
     override func awakeFromNib() {
         
@@ -26,7 +27,7 @@ class PastServiceCell: UITableViewCell {
         commentText.scrollEnabled = false;
         */
         //commentText.layer.frame = commentText.frame
-        serviceTextView.layer.cornerRadius = 6
+        serviceTextView.layer.cornerRadius = 3
         serviceTextView.layer.borderWidth = 0.5
         serviceTextView.layer.borderColor = borderColor.CGColor
         serviceTextView.textContainer.lineFragmentPadding = 0

@@ -15,6 +15,7 @@ class QRVideoViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var captureSession:AVCaptureSession?
     var videoPreviewLayer:AVCaptureVideoPreviewLayer?
     var qrCodeFrameView:UIView?
+    var timer = NSTimer()
     
     
     @IBOutlet weak var messageLabel: UILabel!
@@ -101,37 +102,53 @@ class QRVideoViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 //Checks to make sure format was correct (3 elements separated by ", ")
                 if QRArray.count == 3 {
                     
-                    //Performs a different segue depending on whether it's the first or second scan
-                    if scanNumber == "First" {
-                        
-                        captureSession?.stopRunning()
-                        QRInfo = QRArray
-                        client = QRArray[0]
-                        clientCode = QRArray[1]
-                        clientEmail = QRArray[2]
-                        self.performSegueWithIdentifier("QRRecognized", sender: self)
-                        
-                    } else {
-                        
-                        if QRInfo == QRArray {
-                            
-                            captureSession?.stopRunning()
-                            scanNumber = "First"
-                            seconds = 0
-                            startDate = nil
-                            self.performSegueWithIdentifier("secondQRRecognized", sender: self)
-                            
-                        } else {
-                            
-                            messageLabel.text = "Please scan the same ID card"
-                        }
-                    }
+                    performSegues()
+                    
                 } else {
                     
                     messageLabel.text = "Please scan a valid DBSC ID card"
                 }
             }
         }
+    }
+    
+    //Performs a different segue depending on whether it's the first or second scan
+    func performSegues() {
+        timer.invalidate()
+        
+        var segueString: String = "secondQRRecognized"
+        
+        if scanNumber == "First" {
+            
+            QRInfo = QRArray
+            client = QRArray[0]
+            clientCode = QRArray[1]
+            clientEmail = QRArray[2]
+            segueString = "QRRecognized"
+        }
+        
+        if QRInfo == QRArray {
+            
+            //Stops on current screen
+            captureSession?.stopRunning()
+            
+            //Reads VoiceOver to tell that an ID's been found
+            UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString("ID detected", comment: "ID detected"))
+            
+            //Delays a second so voiceover has time to read
+            let delayInSeconds = 0.5
+            let waitTime = dispatch_time(DISPATCH_TIME_NOW,
+                Int64(delayInSeconds * Double(NSEC_PER_SEC)))
+            dispatch_after(waitTime, dispatch_get_main_queue()) {
+                self.performSegueWithIdentifier(segueString, sender: self)
+                
+            }
+            
+        } else {
+            
+            messageLabel.text = "Please scan the same ID card"
+        }
+    
     }
 
     override func didReceiveMemoryWarning() {

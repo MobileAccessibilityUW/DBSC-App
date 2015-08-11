@@ -20,11 +20,12 @@ public class EmailSend {
             "kSKPSMTPPartMessageKey": content
         ]
         
+        
         var mail = SKPSMTPMessage()
         mail.fromEmail = dbscEmail
         mail.requiresAuth = true
         mail.login = dbscEmail
-        mail.pass = "t4dc1ICPsS"
+        mail.pass = dbscEmailPass
         
         mail.subject = subject
         mail.wantsSecure = true
@@ -34,36 +35,96 @@ public class EmailSend {
         mail.parts = [parts]
         mail.toEmail = sendTo
         
-        if mail.send() == true {
-            return true
+        //Sends email as a synchronous task
+        var sentBool:Bool = false
+        dispatch_sync(dispatch_get_global_queue(
+            Int(QOS_CLASS_USER_INITIATED.value), 0)) {
+                
+                if mail.send() == true {
+                    sentBool = true
+                }
+        }
+        
+        return sentBool
+    }
+    
+    class func formatComments() -> String {
+        
+        if comments.count == 0 {
+            return ""
         } else {
-            return false
+            var commentsPlusDates: String = ""
+            for (var i = 0; i < comments.count; i++) {
+                commentsPlusDates += "\n- \(commentTimes[i]): \"\(comments[i])\""
+            }
+            return "Comments:" + commentsPlusDates + "\n\n"
         }
         
     }
     
     //Stores the email in core data for "Email" entity
-    class func storeEmail(userEmail:String, clientEmail:String, subject:String, content: String, contentwCode:String, sent:Bool) {
+    class func storeEmail() {
         
         let appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         let context:NSManagedObjectContext = appDel.managedObjectContext!
         
-        let newEmail = NSEntityDescription.insertNewObjectForEntityForName("Email", inManagedObjectContext: context) as! NSManagedObject
+        //Sets abbreviation of service
+        checkedServiceAbbr = {
+            if checkedService == "Communication Facilitator (CF)" {
+                return "CF"
+            } else {
+                return "SSP"
+            }
+            }()
         
-        newEmail.setValue(clientEmail, forKey: "userEmail")
-        newEmail.setValue(userEmail, forKey: "clientEmail")
-        newEmail.setValue(subject, forKey: "subject")
-        newEmail.setValue(content, forKey: "content")
-        newEmail.setValue(contentwCode, forKey: "contentwCode")
-        newEmail.setValue(sent, forKey: "sent")
+        //Formats all the text needed for the email and the display on the page:
+        var subject = "\(user) served \(client) as a \(checkedServiceAbbr) on \(dateString)"
         
+        var commentsFormatted: String = EmailSend.formatComments()
+        
+        var content = "\(commentsFormatted)Date: \(dateString) \nStart Time: \(startTime) \nEnd Time: \(endTime) \nTotal Time: \(timeTotal) \n\nService: \(checkedService) \n\(checkedServiceAbbr): \(user) \nClient: \(client)"
+        
+        var contentwCode = "\(content) \nClient Code: \(clientCode)\n__\n\nThis is your digital record of services provided through DBSC. If you don't believe you should have recieved this email, or you find something inaccurate in the content, please email us (the Deaf-Blind Service Center) immediately at " //Fill in with email for DBSC
+        
+        storedEmail = NSEntityDescription.insertNewObjectForEntityForName("Email", inManagedObjectContext: context) as? NSManagedObject
+        storedEmail?.setValue(clientEmail, forKey: "userEmail")
+        storedEmail?.setValue(userEmail, forKey: "clientEmail")
+        storedEmail?.setValue(subject, forKey: "subject")
+        storedEmail?.setValue(content, forKey: "content")
+        storedEmail?.setValue(contentwCode, forKey: "contentwCode")
+        storedEmail?.setValue(false, forKey: "sent")
+        storedEmail?.setValue(false, forKey: "finished")
+        storedEmail?.setValue(NSDate(), forKey: "date")
         
         //Saves context, throws error if there's a problem
         var error: NSError?
         if !context.save(&error) {
             println("Could not save \(error), \(error?.userInfo)")
         }
+    }
+    
+    class func updateEmail (sent: Bool) {
         
+        let appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let context:NSManagedObjectContext = appDel.managedObjectContext!
+        
+        var commentsFormatted: String = EmailSend.formatComments()
+        
+        var content = "\(commentsFormatted)Date: \(dateString) \nStart Time: \(startTime) \nEnd Time: \(endTime) \nTotal Time: \(timeTotal) \n\nService: \(checkedService) \n\(checkedServiceAbbr): \(user) \nClient: \(client)"
+        
+        var contentwCode = "\(content) \nClient Code: \(clientCode)\n__\n\nThis is your digital record of services provided through DBSC. If you don't believe you should have recieved this email, or you find something inaccurate in the content, please email us (the Deaf-Blind Service Center) immediately at " //Fill in with email for DBSC
+        
+        storedEmail?.setValue(content, forKey: "content")
+        storedEmail?.setValue(contentwCode, forKey: "contentwCode")
+        storedEmail?.setValue(sent, forKey: "sent")
+        
+        //Saves context, throws error if there's a problem
+        var error: NSError?
+        if !context.save(&error) {
+            println("Could not update: \(error), \(error?.userInfo)")
+        }
     }
 }
+

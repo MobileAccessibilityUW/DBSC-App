@@ -7,13 +7,15 @@
 //
 
 import UIKit
+import Foundation
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var saveButton: UIButton!
     
     @IBOutlet weak var nameLabel: UITextField!
     @IBOutlet weak var emailLabel: UITextField!
+    @IBOutlet weak var savedLabel: UILabel!
     
     //Saves settings
     @IBAction func savePressed(sender: AnyObject) {
@@ -36,6 +38,15 @@ class SettingsViewController: UIViewController {
         
         NSUserDefaults.standardUserDefaults().synchronize()
         
+        savedLabel.alpha = 1
+        
+    }
+    
+    //
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        
+        savedLabel.alpha = 0
     }
     
     //Closes keyboard when screen is touched outside of keyboard
@@ -57,10 +68,14 @@ class SettingsViewController: UIViewController {
         if userEmail != "" {
             emailLabel.text = userEmail
         }
+        if user != "" && userEmail != "" {
+            savedLabel.alpha = 1
+        }
         
         //navigationController?.prompt = "Please edit your information here"
         
-        // Do any additional setup after loading the view.
+        nameLabel.delegate = self
+        emailLabel.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
