@@ -42,11 +42,15 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    //
-    
+    //Removes the "Saved" label when information is edited
     func textFieldDidBeginEditing(textField: UITextField) {
         
         savedLabel.alpha = 0
+    }
+    
+    //Closes the keyboard when the return "Done" key is pressed
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        return textField.resignFirstResponder()
     }
     
     //Closes keyboard when screen is touched outside of keyboard

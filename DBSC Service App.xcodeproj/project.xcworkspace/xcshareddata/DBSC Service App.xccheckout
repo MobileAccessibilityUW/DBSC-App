@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>ED621CA1-AC78-45C8-8AAB-9878C39F66FC</string>
 	<key>IDESourceControlProjectName</key>
-	<string>DBSC Service App</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>FC610AA3A0E8A6F35B4486DA2CFA65065A595A79</key>
 		<string>https://github.com/connorhargus/DBSC-App.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>DBSC Service App.xcodeproj</string>
+	<string>DBSC Service App.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>FC610AA3A0E8A6F35B4486DA2CFA65065A595A79</key>

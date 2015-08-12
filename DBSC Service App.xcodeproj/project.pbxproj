@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B30D9BB61B61C41B004E702F /* EmailSend.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30D9BB51B61C41B004E702F /* EmailSend.swift */; };
+		B30D9BB61B61C41B004E702F /* EmailFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30D9BB51B61C41B004E702F /* EmailFunctions.swift */; };
 		B30D9BBC1B61E048004E702F /* digital-7.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B30D9BBB1B61D393004E702F /* digital-7.ttf */; };
 		B30D9BBE1B61E1EA004E702F /* digital-dream.regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B30D9BBD1B61E14C004E702F /* digital-dream.regular.ttf */; };
 		B30D9BEE1B6889C6004E702F /* ServicesLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30D9BED1B6889C6004E702F /* ServicesLogViewController.swift */; };
@@ -47,7 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B30D9BB51B61C41B004E702F /* EmailSend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailSend.swift; sourceTree = "<group>"; };
+		B30D9BB51B61C41B004E702F /* EmailFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailFunctions.swift; sourceTree = "<group>"; };
 		B30D9BB71B61D339004E702F /* Let's go Digital Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Let's go Digital Regular.ttf"; sourceTree = "<group>"; };
 		B30D9BB81B61D393004E702F /* digital-7 (italic).ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-7 (italic).ttf"; sourceTree = "<group>"; };
 		B30D9BB91B61D393004E702F /* digital-7 (mono italic).ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "digital-7 (mono italic).ttf"; sourceTree = "<group>"; };
@@ -135,7 +135,7 @@
 		B33811B91B7400A40053F564 /* Helper Classes */ = {
 			isa = PBXGroup;
 			children = (
-				B30D9BB51B61C41B004E702F /* EmailSend.swift */,
+				B30D9BB51B61C41B004E702F /* EmailFunctions.swift */,
 				B336D45D1B6183FF00FF7799 /* InternetReachable.swift */,
 				B338123A1B7714D30053F564 /* TimeFunctions.swift */,
 			);
@@ -357,7 +357,7 @@
 				B33811B41B72AAC90053F564 /* CustomBorderTop.swift in Sources */,
 				B3536A3B1B50774A00BD3EDD /* QRVideoViewController.swift in Sources */,
 				B3AFE9021B6051F2006BA463 /* NSData+Base64Additions.m in Sources */,
-				B30D9BB61B61C41B004E702F /* EmailSend.swift in Sources */,
+				B30D9BB61B61C41B004E702F /* EmailFunctions.swift in Sources */,
 				B3FF6F281B5CC49C007037BC /* CommentTableCell.swift in Sources */,
 				B3AFE9031B6051F2006BA463 /* NSStream+SKPSMTPExtensions.m in Sources */,
 				B33BFAFE1B4E3C3B0000EEEF /* SummaryViewController.swift in Sources */,

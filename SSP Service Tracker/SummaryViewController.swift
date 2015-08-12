@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 var subject: String = ""
 var content: String = ""
@@ -18,16 +19,21 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var processButton: UIButton!
     @IBOutlet weak var serviceTextView: UITextView!
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var recordLabel: UITextView!
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        EmailFunctions.updateEmail(false)
+        
+        //reload(nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        EmailSend.updateEmail(false)
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "reload:",name:"load", object: nil)
     
-        updateTextView()
-
         //Lays out complete service button
         processButton.layer.borderWidth = 0.75
         processButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
@@ -45,38 +51,29 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
         serviceTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
     }
 
-    func reload(notification: NSNotification){
+    func reload(notification: NSNotification?){
         //load data here
-        updateTextView()
+        if let storedEmail = storedEmail {
+            content = EmailFunctions.formatContent("inapp", email: storedEmail)
+        }
+        //content = storedEmail?.valueForKey("content") as! String
+        //contentwCode = storedEmail?.valueForKey("contentwCode") as! String
+        //subject = storedEmail?.valueForKey("subject") as! String
+        
+        serviceTextView.text = content
+        
+        scrollView.layoutIfNeeded()
+        scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, serviceTextView.frame.size.height + containerView.frame.size.height + recordLabel.frame.size.height + processButton.frame.size.height + 40)
+        
     }
 
     //scrollView has to be set up here rather than in viewDidLoad since here the dimensions of the subviews have surely been set up so the height calculations work out
     override func viewDidLayoutSubviews() {
 
-        scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, serviceTextView.frame.size.height + 370)
+        reload(nil)
         
     }
-    
-    func updateTextView() {
-        
-        content = storedEmail?.valueForKey("content") as! String
-        contentwCode = storedEmail?.valueForKey("contentwCode") as! String
-        subject = storedEmail?.valueForKey("subject") as! String
-        
-        var serviceTextViewText:String = content
-        
-        //Using attributedString allows the use of bold lettering for the first line.
-        var attributedText: NSMutableAttributedString = NSMutableAttributedString(string:serviceTextViewText)
-        
-        //Sets the font size to 14 for the rest of the string since the attibutedText of a textview has a smaller font size.
-        attributedText.addAttributes([NSFontAttributeName: UIFont.systemFontOfSize(14)], range: NSRange(location: 0, length: attributedText.length))
-        
-        attributedText.addAttributes([NSFontAttributeName: UIFont.boldSystemFontOfSize(14)], range: NSRange(location: 0, length: 26))
-        
-        serviceTextView.text = content
-        
-    }
-    
+
     //Sends the user back to the Main Menu after the service has been completed
     @IBAction func backPressed(sender: AnyObject) {
         
@@ -86,19 +83,29 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
         
         alert.addAction(UIAlertAction(title: "Proceed", style: .Default, handler: { (action) -> Void in
             
+            let appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let context:NSManagedObjectContext = appDel.managedObjectContext!
+            
+            storedEmail!.setValue(true, forKey: "finished")
+            context.save(nil)
+            
             startDate = nil
             seconds = 0
             scanNumber = "First"
             comments = []
-            storedEmail!.setValue(true, forKey: "finished")
-            
+            selectedCell = nil
+            notified = true
             
             //Checks whether connected to the internet. If true, send emails. If not, store them.
             if Reachability.isConnectedToNetwork() == true {
                 
                 println("Internet connection OK")
                 
-                if EmailSend.sendEmail(userEmail, subject: subject, content: "Hello from DBSC,\n\n" + content) && EmailSend.sendEmail(clientEmail, subject: subject, content: "Hello from DBSC,\n\n" + content) && EmailSend.sendEmail(dbscEmail, subject: subject, content: contentwCode) {
+                var providerContent = EmailFunctions.formatContent("provider", email: storedEmail!)
+                var clientContent = EmailFunctions.formatContent("client", email: storedEmail!)
+                var dbscContent = EmailFunctions.formatContent("dbsc", email: storedEmail!)
+                
+                if EmailFunctions.sendEmail(userEmail, content: providerContent) && EmailFunctions.sendEmail(clientEmail, content: clientContent) && EmailFunctions.sendEmail(dbscEmail, content: dbscContent) {
                     
                     storedEmail!.setValue(true, forKey: "sent")
                     
@@ -142,7 +149,7 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
                 
                 self.presentViewController(alert, animated:true, completion:nil)
                 
-                EmailSend.updateEmail(false)
+                EmailFunctions.updateEmail(false)
                 
             }
 

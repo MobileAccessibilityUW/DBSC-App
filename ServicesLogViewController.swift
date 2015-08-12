@@ -49,8 +49,12 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
             //emails = emails.sort({ ($0.valueForKey("date") as! NSDate).compare($1.valueForKey("date") as! NSDate) == NSComparisonResult.OrderedAscending })
             
             for email:AnyObject in emails! {
-            
-                services.append(email.valueForKey("content") as! String, email.valueForKey("subject") as! String, email.valueForKey("sent") as! Bool)
+                
+                let email = email as? NSManagedObject
+                
+                EmailFunctions.updateGlobalVariables(email)
+                
+                services.append(EmailFunctions.formatContent("inapp", email: email!), EmailFunctions.formatSubject(email!), email!.valueForKey("sent") as! Bool)
             }
         }
         

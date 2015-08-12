@@ -11,19 +11,29 @@ import CoreData
 
 var user:String = ""
 var userEmail:String = ""
-var QRInfo:[String] = [""]
 var client:String = ""
 var clientCode:String = "No ID Card Scanned"
 var clientEmail:String = ""
 var checkedService:String = ""
 var checkedServiceAbbr:String = ""
+var timeTotal:String = "Unknown"
+var startTime:String = ""
+var startDate:NSDate? = nil
+var endTime:String = "Unknown"
+var dateString:String = ""
+var seconds:Int = 0
+
+var notified:Bool = false
+var selectedCell:UITableViewCell?
+var QRInfo:[String] = [""]
 var scanNumber:String = "First"
-//var comments:[String] = []
-//var commentTimes:[String] = []
+var comments:[String] = []
+var commentTimes:[String] = []
 var storedEmail: NSManagedObject?
 
-var comments:[String] = ["Nevermind they found it.", "My client can't find their ID card, I think I'll go ahead and press lost ID so that we can move forward.", "They were late by 10 minutes."]
-var commentTimes:[String] = ["3:46 PM, Aug 6, 2015", "3:10 PM, Aug 6, 2015", "3:00 PM, Aug 6, 2015"]
+//Preset comments and comment times for testing
+//var comments:[String] = ["Nevermind they found it.", "My client can't find their ID card, I think I'll go ahead and press lost ID so that we can move forward.", "They were late by 10 minutes."]
+//var commentTimes:[String] = ["3:46 PM, Aug 6, 2015", "3:10 PM, Aug 6, 2015", "3:00 PM, Aug 6, 2015"]
 //var comments:[String] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"]
 //var commentTimes:[String] = ["3:47 PM, Aug 6, 2015","3:47 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:45 PM, Aug 6, 2015"]
 
@@ -56,7 +66,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
             }
         }
         
-        //Resets checked service when page is reloaded
+        //Resets checked service when page is loaded
         checkedService = ""
         
         //self.view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 1.0, alpha: 1)
@@ -67,16 +77,6 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         
         //Registers the default "cell"
         servicesTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        //Use core data to get user and user email address
-        if let storedName:AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("userName") {
-            
-            user = storedName as! String
-        }
-        if let storedEmail:AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("userEmail") {
-            
-            userEmail = storedEmail as! String
-        }
         
         //Lays out begin service button
         beginServiceButton.layer.borderWidth = 0.75
@@ -107,30 +107,30 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         if(emails?.count > 0) {
             
             for email: AnyObject in emails! {
+                    
+                var alert = UIAlertController(title: "Process unfinished service?", message: "It seems the app quit unexpectedly before a previous service could be processed. Would you like to process this service and add it to the record?", preferredStyle: UIAlertControllerStyle.Alert)
                 
-                if let clientEmail = email.valueForKey("clientEmail") as? String, userEmail = email.valueForKey("userEmail") as? String, subject = email.valueForKey("subject") as? String, content = email.valueForKey("content") as? String, contentwCode = email.valueForKey("contentwCode") as? String, finished = email.valueForKey("finished") as? Bool {
+                alert.addAction(UIAlertAction(title: "No", style: .Default, handler: {
+                    (alert: UIAlertAction!) -> Void in
                     
-                    var alert = UIAlertController(title: "Process unfinished service?", message: "It seems the app quit unexpectedly before a previous service could be processed. Would you like to process this service and add it to the record?", preferredStyle: UIAlertControllerStyle.Alert)
-                    
-                    alert.addAction(UIAlertAction(title: "No", style: .Default, handler: {
-                        (alert: UIAlertAction!) -> Void in
-                        
-                        context.deleteObject(email as! NSManagedObject)
-                        self.sendUnsentEmails()
-                        
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: {
-                        (alert: UIAlertAction!) -> Void in
-                        
-                        email.setValue(true, forKey: "finished")
-                        self.sendUnsentEmails()
-                        
-                    }))
-                    self.presentViewController(alert, animated:true, completion:nil)
-                    
+                    context.deleteObject(email as! NSManagedObject)
                     context.save(nil)
-                }
+                    
+                    self.sendUnsentEmails()
+                    
+                }))
+                
+                alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: {
+                    (alert: UIAlertAction!) -> Void in
+                    
+                    email.setValue(true, forKey: "finished")
+                    context.save(nil)
+                    
+                    self.sendUnsentEmails()
+                    
+                }))
+                self.presentViewController(alert, animated:true, completion:nil)
+            
             }
         } else {
             
@@ -141,42 +141,38 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     //Checks for unsent emails, sends them
     func sendUnsentEmails () {
         
-        if Reachability.isConnectedToNetwork() == true {
-            
-            var appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            
-            var context:NSManagedObjectContext = appDel.managedObjectContext!
-            
-            var request = NSFetchRequest(entityName: "Email")
-            
-            request.returnsObjectsAsFaults = false
-            
-            request.predicate = NSPredicate(format: "sent = %@", false)
-            
-            var emails = context.executeFetchRequest(request, error: nil)
-            
-            //println(emails)
-            
-            if(emails?.count > 0) {
+        var appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        var context:NSManagedObjectContext = appDel.managedObjectContext!
+        
+        var request = NSFetchRequest(entityName: "Email")
+        
+        request.returnsObjectsAsFaults = false
+        
+        request.predicate = NSPredicate(format: "sent = %@", false)
+        
+        var emails = context.executeFetchRequest(request, error: nil)
+        
+        if(emails?.count > 0) {
+        
+            if Reachability.isConnectedToNetwork() == true {
                 
                 var allSent:Bool = false
                 
                 for email: AnyObject in emails! {
                     
-                    if let clientEmail = email.valueForKey("clientEmail") as? String, userEmail = email.valueForKey("userEmail") as? String, subject = email.valueForKey("subject") as? String, content = email.valueForKey("content") as? String, contentwCode = email.valueForKey("contentwCode") as? String {
-                        
-                        if EmailSend.sendEmail(userEmail, subject: subject, content: "Hello from DBSC,\n\n" + content) && EmailSend.sendEmail(clientEmail, subject: subject, content: "Hello from DBSC,\n\n" + content) && EmailSend.sendEmail(dbscEmail, subject: subject, content: contentwCode) {
-                            
-                            email.setValue(true, forKey: "sent")
-                        }
-                        
-                    } else {
-                        
-                        //context.deleteObject(email as! NSManagedObject)
-                        
-                    }
+                    EmailFunctions.updateGlobalVariables(email as? NSManagedObject)
                     
-                    context.save(nil)
+                    var providerContent = EmailFunctions.formatContent("provider", email: storedEmail!)
+                    var clientContent = EmailFunctions.formatContent("client", email: storedEmail!)
+                    var dbscContent = EmailFunctions.formatContent("dbsc", email: storedEmail!)
+                    
+                    if EmailFunctions.sendEmail(userEmail, content: providerContent) && EmailFunctions.sendEmail(clientEmail, content: clientContent) && EmailFunctions.sendEmail(dbscEmail, content: dbscContent) {
+                        
+                        email.setValue(true, forKey: "sent")
+                        context.save(nil)
+                    
+                    }
                 }
                 
                 var alert = UIAlertController(title: "Past services processed", message: "Past services performed without internet access have now been processed with DBSC.", preferredStyle: UIAlertControllerStyle.Alert)
@@ -185,10 +181,21 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
                 
                 self.presentViewController(alert, animated:true, completion:nil)
                 
-            } else {
+            } else if !notified {
                 
-                //println("No results")
+                notified = true
+                
+                var alert = UIAlertController(title: "Reminder: Past services waiting to process", message: "Please open the app again when internet access is regained to ensure speedy processing of your services.", preferredStyle: UIAlertControllerStyle.Alert)
+                
+                alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: nil))
+                
+                self.presentViewController(alert, animated:true, completion:nil)
             }
+        }
+        
+        EmailFunctions.updateGlobalVariables(nil)
+        if let cell = selectedCell {
+            checkedService = cell.textLabel!.text!
         }
     }
     
@@ -223,7 +230,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     @IBAction func verifyPressed(sender: AnyObject) {
         
         if checkSettings() {
-
+            
             performSegueWithIdentifier("takeQRShot", sender: self)
         }
     }
@@ -233,7 +240,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         
         if checkSettings() {
             
-        var inputTextField: UITextField?
+            var inputTextField: UITextField?
         
             var alert = UIAlertController(title: "Missing Client ID Card?", message: "Please enter your client's name and press \"Continue\" if so.", preferredStyle: UIAlertControllerStyle.Alert)
             
@@ -318,6 +325,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         var cell: UITableViewCell = tableView.cellForRowAtIndexPath(indexPath)!
         
         checkedService = self.services[indexPath.row]
+        
+        selectedCell = cell
         
         cell.accessoryType = UITableViewCellAccessoryType.Checkmark
         

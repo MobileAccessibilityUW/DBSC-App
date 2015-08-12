@@ -10,13 +10,6 @@ import UIKit
 import CoreData
 import Foundation
 
-var timeTotal:String = "Unknown"
-var startTime:String = ""
-var startDate:NSDate? = nil
-var endTime:String = "Unknown"
-var dateString:String = ""
-var seconds:Int = 0
-
 class ServiceRunningViewController: UIViewController {
 
     var timer = NSTimer()
@@ -35,7 +28,7 @@ class ServiceRunningViewController: UIViewController {
         //Attempt at changing accessibility label to inform blind user that an ID card was scanned successfully
         //navigationController?.navigationBar.topItem?.accessibilityLabel = "ID card scanned"
         
-        //Sets up back button for the next view
+        //Sets up cancel button for the view
         var button = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "backPressed")
         self.navigationItem.leftBarButtonItem = button
         
@@ -72,7 +65,7 @@ class ServiceRunningViewController: UIViewController {
         
         if storedEmail == nil {
             
-            EmailSend.storeEmail()
+            EmailFunctions.storeEmail()
         }
         
         //Sets timer to start counting and calling "changeLabel"
@@ -113,6 +106,8 @@ class ServiceRunningViewController: UIViewController {
             startDate = nil
             seconds = 0
             scanNumber = "First"
+            comments = []
+            selectedCell = nil
             self.timer.invalidate()
             
             //Deletes email if service is cancelled
@@ -135,7 +130,7 @@ class ServiceRunningViewController: UIViewController {
         
     }
     
-    @IBAction func completePressed(sender: AnyObject) {
+    func prepareForProceeding() {
         
         scanNumber = "Second"
         
@@ -144,10 +139,16 @@ class ServiceRunningViewController: UIViewController {
         let formatter = NSDateFormatter()
         formatter.timeStyle = .ShortStyle
         endTime = formatter.stringFromDate(date)
-                
+        
         timeTotal = self.timeLabel.text!
         
         self.timer.invalidate()
+        
+    }
+    
+    @IBAction func completePressed(sender: AnyObject) {
+        
+        prepareForProceeding()
         
         self.performSegueWithIdentifier("serviceCompleted", sender: self)
         
@@ -155,6 +156,8 @@ class ServiceRunningViewController: UIViewController {
     
     //Sets up what happens if no ID is found
     @IBAction func lostIDPressed(sender: AnyObject) {
+        
+        prepareForProceeding()
         
         var inputTextField: UITextField?
         

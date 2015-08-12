@@ -125,13 +125,16 @@ class CommentFeedViewController: UIViewController, UITextViewDelegate, UITableVi
             //Updates the service log
             if let parentVC = self.parentViewController as? SummaryViewController {
                 
-                EmailSend.updateEmail(false)
+                EmailFunctions.updateEmail(false)
                 
             } else if let parentVC2 = self.parentViewController as? ServiceRunningViewController {
                 
-                EmailSend.updateEmail(false)
+                EmailFunctions.updateEmail(false)
+                
             }
-            
+            //Scrolls back to top of table
+            let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+            commentsTable.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Top, animated: true)
         }
         
     }
