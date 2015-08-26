@@ -9,20 +9,16 @@
 import UIKit
 import CoreData
 
-class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating, UISearchBarDelegate {
 
     @IBOutlet weak var pastServicesTable: UITableView!
     
     var services: [(String, String, Bool)] = []
+    var filteredServices: [(String, String, Bool)] = []
+    var resultSearchController = UISearchController()
     
     override func viewDidLoad() {
         
-        pastServicesTable.estimatedRowHeight = self.pastServicesTable.rowHeight
-        pastServicesTable.rowHeight = UITableViewAutomaticDimension
-        
-        //Gets rid of the line between comment cells
-        pastServicesTable.separatorStyle = UITableViewCellSeparatorStyle.None
-        pastServicesTable.backgroundView = nil
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -40,13 +36,9 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
         
         request.returnsObjectsAsFaults = false
         
-        //request.predicate = NSPredicate(format: "sent = %@", false)
-        
         var emails = context.executeFetchRequest(request, error: nil)
         
         if(emails?.count > 0) {
-            
-            //emails = emails.sort({ ($0.valueForKey("date") as! NSDate).compare($1.valueForKey("date") as! NSDate) == NSComparisonResult.OrderedAscending })
             
             for email:AnyObject in emails! {
                 
@@ -58,12 +50,56 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
         
+        self.resultSearchController = ({
+            let controller = UISearchController(searchResultsController: nil)
+            controller.searchResultsUpdater = self
+            controller.dimsBackgroundDuringPresentation = false
+            controller.searchBar.sizeToFit()
+            controller.searchBar.placeholder = "Search by keyword, name, etc."
+            controller.searchBar.barTintColor = UIColor(red: 224/256, green: 244/256, blue: 255/256, alpha: 1)
+            controller.searchBar.delegate = self
+            
+            self.pastServicesTable.tableHeaderView = controller.searchBar
+            
+            return controller
+        })()
+        
+        pastServicesTable.estimatedRowHeight = self.pastServicesTable.rowHeight
+        pastServicesTable.rowHeight = UITableViewAutomaticDimension
+        
+        //Gets rid of the line between comment cells
+        pastServicesTable.separatorStyle = UITableViewCellSeparatorStyle.None
+        
         pastServicesTable.reloadData()
         
-        //println(emails)
+        self.updateSearchResultsForSearchController(resultSearchController)
         
     }
-
+    
+    override func viewDidAppear(animated: Bool) {
+        
+        pastServicesTable.reloadData()
+    }
+    
+    // MARK - Helpers methods
+    func filterContentForSearchText(searchText: String) {
+        self.filteredServices = self.services.filter({(service:(String,String,Bool)) -> Bool in
+            
+            let subjectMatch = service.1.uppercaseString.rangeOfString(searchText.uppercaseString)
+            let contentMatch = service.0.uppercaseString.rangeOfString(searchText.uppercaseString)
+            return (subjectMatch != nil) || (contentMatch != nil)
+        })
+    }
+    
+    // MARK: - UISearchControllerDelegate
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        
+        filteredServices = services
+        pastServicesTable.separatorStyle = UITableViewCellSeparatorStyle.None
+        filterContentForSearchText(searchController.searchBar.text)
+        pastServicesTable.reloadData()
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         //Uses prototype cell from Interface Builder called "CommentTableCell"
@@ -78,9 +114,20 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
             tableCell.serviceTitleView.text = "No past services recorded."
         }
         else {
+            if services.count >= 2 {
+                pastServicesTable.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
+            }
+        
+            let service:(String,String,Bool)
             
-            tableCell.serviceTextView.text = services[indexPath.row].0
-            tableCell.serviceTitleView.text = services[indexPath.row].1
+            //Displays different table if searching is active
+            if (self.resultSearchController.active) {
+                service = self.filteredServices[indexPath.row]
+            } else {
+                service = self.services[indexPath.row]
+            }
+            tableCell.serviceTextView.text = service.0
+            tableCell.serviceTitleView.text = service.1
             if services[indexPath.row].2 == true {
                 
                 tableCell.sentTextView.alpha = 1
@@ -89,26 +136,32 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
         return tableCell
     }
     
-    
-    //As many rows in the table as there are comments
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return max(1, services.count)
-        
+    //Sets inset for the separator between cells
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+            
+        if cell.respondsToSelector("setSeparatorInset:") {
+            cell.separatorInset = UIEdgeInsetsMake(0, 30, 0, 30)
+        }
+        if cell.respondsToSelector("setLayoutMargins:") {
+            cell.layoutMargins = UIEdgeInsetsMake(0, 30, 0, 30)
+        }
+        if cell.respondsToSelector("setPreservesSuperviewLayoutMargins:") {
+            cell.preservesSuperviewLayoutMargins = false
+        }
     }
     
-    //Allows the user to delete comments
-    /*func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    //As many rows in the table as there are services, depending on searching or not.
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            
-            comments.removeAtIndex(indexPath.row)
-            pastServicesTable.deleteRowsAtIndexPaths([indexPath],  withRowAnimation: UITableViewRowAnimation.Automatic)
+        if (self.resultSearchController.active) {
+            return filteredServices.count
+        } else {
+            return max(1, services.count)
         }
-        
-    }*/
+    }
     
-    //Closes the keyboard when the return "Done" key is pressed
+    
+    //Closes the keyboard when the return "Search" key is pressed
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         if(text == "\n") {
             textView.resignFirstResponder()
@@ -116,7 +169,13 @@ class ServicesLogViewController: UIViewController, UITableViewDelegate, UITableV
         }
         return true
     }
-
+    
+    //Closes keyboard on outside touch
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        self.view.endEditing(true)
+        
+    }
     
 }
 

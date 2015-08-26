@@ -24,18 +24,19 @@ var dateString:String = ""
 var seconds:Int = 0
 
 var notified:Bool = false
+var finishing:Bool = false
 var selectedCell:UITableViewCell?
 var QRInfo:[String] = [""]
 var scanNumber:String = "First"
-var comments:[String] = []
-var commentTimes:[String] = []
+//var comments:[String] = []
+//var commentTimes:[String] = []
 var storedEmail: NSManagedObject?
 
 //Preset comments and comment times for testing
 //var comments:[String] = ["Nevermind they found it.", "My client can't find their ID card, I think I'll go ahead and press lost ID so that we can move forward.", "They were late by 10 minutes."]
 //var commentTimes:[String] = ["3:46 PM, Aug 6, 2015", "3:10 PM, Aug 6, 2015", "3:00 PM, Aug 6, 2015"]
-//var comments:[String] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"]
-//var commentTimes:[String] = ["3:47 PM, Aug 6, 2015","3:47 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:45 PM, Aug 6, 2015"]
+var comments:[String] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"]
+var commentTimes:[String] = ["3:47 PM, Aug 6, 2015","3:47 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:46 PM, Aug 6, 2015","3:45 PM, Aug 6, 2015"]
 
 var dbscEmail: String = ""
 var dbscEmailPass: String = ""
@@ -54,6 +55,12 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        startDate = nil
+        seconds = 0
+        comments = []
+        selectedCell = nil
+        storedEmail = nil
+        
         //Gets DBSC mail information from text file
         if let path = NSBundle.mainBundle().pathForResource("DBSCINFORMATIONHERE", ofType: "txt") {
 
@@ -68,24 +75,6 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         
         //Resets checked service when page is loaded
         checkedService = ""
-        
-        //self.view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 1.0, alpha: 1)
-        
-        //Gets rid of the line between comment cells
-        //servicesTableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        servicesTableView.rowHeight = 35
-        
-        //Registers the default "cell"
-        servicesTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        //Lays out begin service button
-        beginServiceButton.layer.borderWidth = 0.75
-        beginServiceButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
-        beginServiceButton.layer.cornerRadius = 3.0
-        
-        servicesTableView.layer.borderWidth = 0.75
-        servicesTableView.layer.borderColor = UIColor(red: 0.75, green: 0.75 , blue: 0.75, alpha: 1.0).CGColor
-        servicesTableView.layer.cornerRadius = 3.0
         
     }
     
@@ -123,10 +112,12 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
                 alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: {
                     (alert: UIAlertAction!) -> Void in
                     
-                    email.setValue(true, forKey: "finished")
-                    context.save(nil)
+                    EmailFunctions.updateGlobalVariables(email as? NSManagedObject)
+                    finishing = true
                     
-                    self.sendUnsentEmails()
+                    self.performSegueWithIdentifier("finishUnfinished", sender: self)
+                    
+                    //self.sendUnsentEmails()
                     
                 }))
                 self.presentViewController(alert, animated:true, completion:nil)
@@ -136,6 +127,29 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
             
             self.sendUnsentEmails()
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        
+        //Gets rid of the line between comment cells
+        //servicesTableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        servicesTableView.rowHeight = 35
+        
+        //Registers the default "cell"
+        servicesTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        //Lays out begin service button
+        beginServiceButton.layer.borderWidth = 0.75
+        beginServiceButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
+        beginServiceButton.layer.cornerRadius = 3.0
+        
+        servicesTableView.layer.borderWidth = 0.75
+        servicesTableView.layer.borderColor = UIColor(red: 0.75, green: 0.75 , blue: 0.75, alpha: 1.0).CGColor
+        servicesTableView.layer.cornerRadius = 3.0
+        
+        //Resets error label
+        errorLabel.alpha = 0
+        
     }
     
     //Checks for unsent emails, sends them
@@ -313,6 +327,20 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         
         
         return tableCell
+    }
+    
+    //Sets inset for the separator between cells
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if cell.respondsToSelector("setSeparatorInset:") {
+            cell.separatorInset = UIEdgeInsetsZero
+        }
+        if cell.respondsToSelector("setLayoutMargins:") {
+            cell.layoutMargins = UIEdgeInsetsZero
+        }
+        if cell.respondsToSelector("setPreservesSuperviewLayoutMargins:") {
+            cell.preservesSuperviewLayoutMargins = false
+        }
     }
     
     //Gives the cell a checkmark and sets it as the checkedService when tapped

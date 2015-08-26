@@ -7,3 +7,7 @@
 #import "NSData+Base64Additions.h"
 #import "NSStream+SKPSMTPExtensions.h"
 #import "SKPSMTPMessage.h"
+
+#import "AFNetworking.h"
+#import "Mailgun.h"
+#import "MGMessage.h"

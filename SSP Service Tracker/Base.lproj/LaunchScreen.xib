@@ -10,22 +10,13 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <navigationBar contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="atH-iD-2qj">
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="atH-iD-2qj">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="44"/>
-                    <color key="barTintColor" red="0.79607850309999995" green="0.88627457620000005" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
-                    <items>
-                        <navigationItem id="YPQ-ts-hML"/>
-                    </items>
+                    <color key="barTintColor" red="0.89879728619999999" green="0.96476665299999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </navigationBar>
-                <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y2u-kJ-bVK">
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y2u-kJ-bVK">
                     <rect key="frame" x="0.0" y="19" width="480" height="44"/>
-                    <color key="barTintColor" red="0.79607850309999995" green="0.88627457620000005" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
-                    <items>
-                        <navigationItem title="Main Menu" id="KXf-AG-MbH">
-                            <barButtonItem key="leftBarButtonItem" title="Settings" id="4rV-43-yvv"/>
-                            <barButtonItem key="rightBarButtonItem" title="Log" id="ZT9-pN-2R8"/>
-                        </navigationItem>
-                    </items>
+                    <color key="barTintColor" red="0.89879728619999999" green="0.96476665299999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </navigationBar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -33,6 +24,8 @@
                 <constraint firstItem="y2u-kJ-bVK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6OV-pe-cKN"/>
                 <constraint firstAttribute="trailing" secondItem="y2u-kJ-bVK" secondAttribute="trailing" id="B4B-QJ-TRH"/>
                 <constraint firstItem="atH-iD-2qj" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Gm9-vP-G2H"/>
+                <constraint firstItem="atH-iD-2qj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="LDO-1S-UBo"/>
+                <constraint firstItem="y2u-kJ-bVK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="19" id="M4F-8g-FWC"/>
                 <constraint firstAttribute="trailing" secondItem="atH-iD-2qj" secondAttribute="trailing" id="mib-sU-OSb"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

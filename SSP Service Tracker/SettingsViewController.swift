@@ -8,6 +8,7 @@
 
 import UIKit
 import Foundation
+import CoreData
 
 class SettingsViewController: UIViewController, UITextFieldDelegate {
     
@@ -16,6 +17,73 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var nameLabel: UITextField!
     @IBOutlet weak var emailLabel: UITextField!
     @IBOutlet weak var savedLabel: UILabel!
+    @IBOutlet weak var deleteButton: UIButton!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if user != "" {
+            nameLabel.text = user
+        }
+        if userEmail != "" {
+            emailLabel.text = userEmail
+        }
+        if user != "" && userEmail != "" {
+            savedLabel.alpha = 1
+        }
+        
+        //navigationController?.prompt = "Please edit your information here"
+        
+        nameLabel.delegate = self
+        emailLabel.delegate = self
+    }
+    
+    override func viewDidLayoutSubviews() {
+        
+        //Lays out save information button
+        saveButton.layer.borderWidth = 0.75
+        saveButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
+        saveButton.layer.cornerRadius = 3.0
+        
+        //Lays out delete records button
+        deleteButton.layer.borderWidth = 0.75
+        deleteButton.layer.borderColor = deleteButton.titleLabel?.textColor.CGColor
+        deleteButton.layer.cornerRadius = 3.0
+    }
+    
+    @IBAction func deletePressed(sender: AnyObject) {
+        
+        var alert = UIAlertController(title: "Delete all service records?", message: "Records will be permanently deleted. If you have performed services for which you have not received a confirmation email, press \"No\".", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        alert.addAction(UIAlertAction(title: "No", style: .Default, handler: nil))
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { (alert) -> Void in
+            
+            var appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            
+            var context:NSManagedObjectContext = appDel.managedObjectContext!
+            
+            var request = NSFetchRequest(entityName: "Email")
+            
+            request.returnsObjectsAsFaults = false
+            
+            var emails = context.executeFetchRequest(request, error: nil)
+            
+            if(emails?.count > 0) {
+                
+                for email:AnyObject in emails! {
+                    
+                    context.deleteObject(email as! NSManagedObject)
+                    context.save(nil)
+                }
+            }
+
+        }))
+        
+        self.presentViewController(alert, animated:true, completion:nil)
+
+        
+    }
     
     //Saves settings
     @IBAction func savePressed(sender: AnyObject) {
@@ -56,30 +124,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     //Closes keyboard when screen is touched outside of keyboard
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         self.view.endEditing(true)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        //Lays out save information button
-        saveButton.layer.borderWidth = 0.75
-        saveButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
-        saveButton.layer.cornerRadius = 3.0
-        
-        if user != "" {
-            nameLabel.text = user
-        }
-        if userEmail != "" {
-            emailLabel.text = userEmail
-        }
-        if user != "" && userEmail != "" {
-            savedLabel.alpha = 1
-        }
-        
-        //navigationController?.prompt = "Please edit your information here"
-        
-        nameLabel.delegate = self
-        emailLabel.delegate = self
     }
 
     override func didReceiveMemoryWarning() {

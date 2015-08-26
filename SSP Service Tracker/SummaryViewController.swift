@@ -26,21 +26,33 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
         
         EmailFunctions.updateEmail(false)
         
-        //reload(nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        reload(nil)
+        
+        scrollView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "reload:",name:"load", object: nil)
-    
+        
+        //Hides back button if finishing a service
+        if finishing == true {
+            
+            self.navigationItem.setHidesBackButton(true, animated: true)
+            
+        }
+        
+    }
+
+    //scrollView has to be set up here rather than in viewDidLoad since here the dimensions of the subviews have surely been set up so the height calculations work out
+    override func viewDidLayoutSubviews() {
+        
         //Lays out complete service button
         processButton.layer.borderWidth = 0.75
         processButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
         processButton.layer.cornerRadius = 3.0
-        
-        //Hides back button since the service has now been finalized
-        //self.navigationItem.setHidesBackButton(true, animated: true)
         
         //Layout for the service text view
         var borderColor : UIColor = UIColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0)
@@ -49,8 +61,10 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
         serviceTextView.layer.borderColor = borderColor.CGColor
         serviceTextView.textContainer.lineFragmentPadding = 0
         serviceTextView.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5)
+        
+        reload(nil)
     }
-
+    
     func reload(notification: NSNotification?){
         //load data here
         if let storedEmail = storedEmail {
@@ -66,14 +80,7 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
         scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, serviceTextView.frame.size.height + containerView.frame.size.height + recordLabel.frame.size.height + processButton.frame.size.height + 40)
         
     }
-
-    //scrollView has to be set up here rather than in viewDidLoad since here the dimensions of the subviews have surely been set up so the height calculations work out
-    override func viewDidLayoutSubviews() {
-
-        reload(nil)
-        
-    }
-
+    
     //Sends the user back to the Main Menu after the service has been completed
     @IBAction func backPressed(sender: AnyObject) {
         
@@ -89,13 +96,6 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
             storedEmail!.setValue(true, forKey: "finished")
             context.save(nil)
             
-            startDate = nil
-            seconds = 0
-            scanNumber = "First"
-            comments = []
-            selectedCell = nil
-            notified = true
-            
             //Checks whether connected to the internet. If true, send emails. If not, store them.
             if Reachability.isConnectedToNetwork() == true {
                 
@@ -108,6 +108,7 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
                 if EmailFunctions.sendEmail(userEmail, content: providerContent) && EmailFunctions.sendEmail(clientEmail, content: clientContent) && EmailFunctions.sendEmail(dbscEmail, content: dbscContent) {
                     
                     storedEmail!.setValue(true, forKey: "sent")
+                    context.save(nil)
                     
                     //Alert to end and notify of email
                     alert = UIAlertController(title: "Service processed!", message: "An email has been sent to you and your client.", preferredStyle: UIAlertControllerStyle.Alert)
@@ -118,11 +119,11 @@ class SummaryViewController: UIViewController, UIScrollViewDelegate {
                     
                 }
                 
-                storedEmail = nil
-                
                 alert.addAction(UIAlertAction(title: "Okay", style: .Default, handler: { (action) -> Void in
-                    
-                    
+
+                    scanNumber = "First"
+                    notified = true
+                    selectedCell = nil
                     self.performSegueWithIdentifier("backToMain", sender: self)
                     
                 }))

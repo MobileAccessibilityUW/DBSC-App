@@ -52,9 +52,9 @@ public class EmailFunctions {
     class func updateGlobalVariables(email:NSManagedObject?) {
         
         //Use core data to get user and user email address
-        let persistentName: String = (NSUserDefaults.standardUserDefaults().objectForKey("userName") as! String) ?? ""
+        let persistentName: String = (NSUserDefaults.standardUserDefaults().objectForKey("userName") as? String) ?? ""
         
-        let persistentEmail: String = (NSUserDefaults.standardUserDefaults().objectForKey("userEmail") as! String) ?? ""
+        let persistentEmail: String = (NSUserDefaults.standardUserDefaults().objectForKey("userEmail") as? String) ?? ""
         
         client = email?.valueForKey("client") as? String ?? ""
         clientEmail = email?.valueForKey("clientEmail") as? String ?? ""
@@ -68,6 +68,7 @@ public class EmailFunctions {
         checkedService = email?.valueForKey("checkedService") as? String ?? ""
         checkedServiceAbbr = email?.valueForKey("checkedServiceAbbr") as? String ?? ""
         storedEmail = email ?? nil
+        
     }
     
     class func formatComments() -> String {
@@ -107,7 +108,7 @@ public class EmailFunctions {
     //Formats all the content needed for the email and the display on the page
     class func formatContent(showTo:String, email:NSManagedObject) -> String {
         
-        var commentsFormatted: String = EmailFunctions.formatComments()
+        var commentsFormatted: String = email.valueForKey("comments") as! String
         
         var emailBottomDescription: String = "\n__\n\nThis is your digital record of services providedfor the Deaf-Blind Service Center. If you have any questions, don't believe you should have recieved this email, or you find something inaccurate in the content, please email us immediately at \(dbscEmail)."
         
@@ -138,15 +139,6 @@ public class EmailFunctions {
         let appDel:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         let context:NSManagedObjectContext = appDel.managedObjectContext!
-        
-        //Sets abbreviation of service
-        checkedServiceAbbr = {
-            if checkedService == "Communication Facilitator (CF)" {
-                return "CF"
-            } else {
-                return "SSP"
-            }
-        }()
         
         var commentsFormatted: String = EmailFunctions.formatComments()
         
@@ -184,6 +176,8 @@ public class EmailFunctions {
         
         storedEmail?.setValue(commentsFormatted, forKey: "comments")
         storedEmail?.setValue(sent, forKey: "sent")
+        storedEmail?.setValue(endTime, forKey: "endTime")
+        storedEmail?.setValue(timeTotal, forKey: "timeTotal")
         
         //Saves context, throws error if there's a problem
         var error: NSError?

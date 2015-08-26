@@ -28,15 +28,6 @@ class ServiceRunningViewController: UIViewController {
         //Attempt at changing accessibility label to inform blind user that an ID card was scanned successfully
         //navigationController?.navigationBar.topItem?.accessibilityLabel = "ID card scanned"
         
-        //Sets up cancel button for the view
-        var button = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "backPressed")
-        self.navigationItem.leftBarButtonItem = button
-        
-        //Lays out complete service button
-        completeButton.layer.borderWidth = 0.75
-        completeButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
-        completeButton.layer.cornerRadius = 3.0
-        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -44,6 +35,16 @@ class ServiceRunningViewController: UIViewController {
         seconds = secondsSinceStart()
         
         if startDate == nil {
+            
+            //Sets abbreviation of service
+            checkedServiceAbbr = {
+                if checkedService == "Communication Facilitator (CF)" {
+                    return "CF"
+                } else {
+                    return "SSP"
+                }
+            }()
+            
             //Sets the start time as view appears
             let date = NSDate()
             startDate = date
@@ -56,7 +57,7 @@ class ServiceRunningViewController: UIViewController {
             dateFormatter.dateStyle = .MediumStyle
             dateString = dateFormatter.stringFromDate(date)
             toLabel.text = "Client: " + "\(client)"
-            byLabel.text = "Provider: " + "\(user)"
+            byLabel.text = "\(checkedServiceAbbr): " + "\(user)"
             startTimeLabel.text = "Start Time: \(startTime)"
             
             timer.invalidate()
@@ -68,8 +69,27 @@ class ServiceRunningViewController: UIViewController {
             EmailFunctions.storeEmail()
         }
         
+        
+        
         //Sets timer to start counting and calling "changeLabel"
         timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "changeLabel", userInfo: nil, repeats: true)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        
+        //Sets up cancel button for the view
+        var button = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: "backPressed")
+        self.navigationItem.leftBarButtonItem = button
+        
+        //Lays out complete service button
+        completeButton.layer.borderWidth = 0.75
+        completeButton.layer.borderColor = UIColor(red: 0, green: 0.478431 , blue: 1.0, alpha: 1.0).CGColor
+        completeButton.layer.cornerRadius = 3.0
+        
+        //Lays out clock border
+        timeLabel.layer.borderWidth = 2
+        timeLabel.layer.borderColor = timeLabel.textColor.CGColor
+        timeLabel.layer.cornerRadius = 3.0
     }
     
     //Updates the time label as the timer is running
@@ -123,6 +143,8 @@ class ServiceRunningViewController: UIViewController {
         
         let nevermindAction = UIAlertAction(title: "Oops, return to service", style: .Cancel, handler: nil)
         
+        cancelMenu.popoverPresentationController?.sourceView = self.view
+        cancelMenu.popoverPresentationController?.sourceRect = CGRectMake(timeLabel.frame.origin.x + timeLabel.frame.width / 2, timeLabel.frame.origin.y + timeLabel.frame.height / 2, 1.0, 1.0)
         cancelMenu.addAction(cancelAction)
         cancelMenu.addAction(nevermindAction)
         

@@ -25,58 +25,13 @@ class CommentFeedViewController: UIViewController, UITextViewDelegate, UITableVi
     
     var commentBoxConstraintConstant:CGFloat = 0.0
     
-    override func viewWillAppear(animated: Bool) {
-        commentsTable.reloadData()
-        
-        if let parentVC = self.parentViewController as? SummaryViewController {
-            descriptionLabel.text = "Please leave any final comments and/or delete unwanted ones before processing:"
-            
-        } else {
-            descriptionLabel.text = "Leave comments in our record for this service if anything unexpected occurs:"
-        }
-    }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //Border for the comment box
-        commentBox.layer.borderWidth = 1
-        commentBox.layer.borderColor = borderColor.CGColor
-        commentBox.delegate = self
-        self.view.bringSubviewToFront(commentBox) //Uncovers commentBox from other views
-        
-        
-        //Gives the container for the comment section a border
-        
-        self.view.layer.borderWidth = 0.75
-        self.view.layer.borderColor = borderColor.CGColor
-        self.view.layer.cornerRadius = 3.0
-        
-        //Gets rid of the line between comment cells
-        commentsTable.separatorStyle = UITableViewCellSeparatorStyle.None
-        commentsTable.backgroundView = nil
-        
-        var border = CALayer()
-        border.frame = CGRectMake(0, 0, CGRectGetWidth(commentsTable.layer.frame), 1)
-        border.backgroundColor = borderColor.CGColor
-        commentsTable.layer.addSublayer(border)
-        
-        //Adds line to top of table only (see CustomBorderTop.swift)
-        //commentsTable.layoutMargins.top
-        //commentsTable.layer.addBorder(UIRectEdge.Top, color: borderColor, thickness: 1)
-        /*commentsTable.layer.borderWidth = 0.75
-        commentsTable.layer.borderColor = buttonColor.CGColor
-        */commentsTable.layer.cornerRadius = 3.0
-        
         //Sets the height of the row to fit text boxes
         commentsTable.estimatedRowHeight = self.commentsTable.rowHeight
         commentsTable.rowHeight = UITableViewAutomaticDimension
-        
-        //Sets up button styling
-        submitButton.layer.borderWidth = 0.75
-        submitButton.layer.borderColor = buttonColor.CGColor
-        submitButton.layer.cornerRadius = 3.0
         
         //Observes for keyboard changes to move the text view
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillChange:"), name:UIKeyboardWillChangeFrameNotification, object: nil);
@@ -86,6 +41,61 @@ class CommentFeedViewController: UIViewController, UITextViewDelegate, UITableVi
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self);
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        commentsTable.reloadData()
+        
+        if let parentVC = self.parentViewController as? SummaryViewController {
+            if finishing == false {
+                descriptionLabel.text = "Please leave any final comments and/or delete unwanted ones before processing:"
+            } else {
+                descriptionLabel.text = "In addition to any comments on the service, please tell us the service's end time:"
+            }
+        } else {
+            descriptionLabel.text = "Leave comments in our record for this service if anything unexpected occurs:"
+        }
+        
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        
+        //Border for top of comment table
+        var border = CALayer()
+        //border.frame = CGRectMake(0, 0, CGRectGetWidth(commentsTable.layer.frame), 1)
+        border.frame = CGRectMake(0, 0, super.view.frame.width, 1)
+        border.backgroundColor = borderColor.CGColor
+        commentsTable.layer.addSublayer(border)
+        
+        //Border for the comment box
+        commentBox.layer.borderWidth = 1
+        commentBox.layer.borderColor = borderColor.CGColor
+        commentBox.delegate = self
+        self.view.bringSubviewToFront(commentBox) //Uncovers commentBox from other views
+        
+        //Gives the container for the comment section a border
+        self.view.layer.borderWidth = 0.75
+        self.view.layer.borderColor = borderColor.CGColor
+        self.view.layer.cornerRadius = 3.0
+        
+        //Gets rid of the line between comment cells
+        commentsTable.separatorStyle = UITableViewCellSeparatorStyle.None
+        commentsTable.backgroundView = nil
+        
+        //Adds line to top of table only (see CustomBorderTop.swift)
+        //commentsTable.layoutMargins.top
+        //commentsTable.layer.addBorder(UIRectEdge.Top, color: borderColor, thickness: 1)
+        //commentsTable.layer.borderWidth = 0.75
+        //commentsTable.layer.borderColor = buttonColor.CGColor
+        //commentsTable.layer.cornerRadius = 3.0
+        
+        //Sets up button styling
+        submitButton.layer.borderWidth = 0.75
+        submitButton.layer.borderColor = buttonColor.CGColor
+        submitButton.layer.cornerRadius = 3.0
+
+        
     }
     
     override func didReceiveMemoryWarning() {
